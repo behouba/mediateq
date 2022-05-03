@@ -1,5 +1,7 @@
 package stash
 
-// Image is a representation of stash image file.
-type Image struct {
+type ImageProcessor interface {
+	Resize(buff []byte, width, height int) ([]byte, error)
+	Rotage(buff []byte, degree int) ([]byte, error)
+	Grayscale(buff []byte) ([]byte, error)
 }
