@@ -1,27 +1,18 @@
 package image
 
 import (
-	"fmt"
-	"os"
+	"net/http"
 
-	"github.com/h2non/bimg"
+	"github.com/go-chi/chi/v5"
 )
 
-func main() {
-	buffer, err := bimg.Read("image.jpg")
-	if err != nil {
-		fmt.Fprintln(os.Stderr, err)
-	}
+func Setup(r *chi.Mux) {
 
-	newImage, err := bimg.NewImage(buffer).Resize(800, 600)
-	if err != nil {
-		fmt.Fprintln(os.Stderr, err)
-	}
+	r.Post("/image", upload)
 
-	size, err := bimg.NewImage(newImage).Size()
-	if size.Width == 800 && size.Height == 600 {
-		fmt.Println("The image size is valid")
-	}
+	r.Get("/hello", upload)
+}
 
-	bimg.Write("new.jpg", newImage)
+func upload(w http.ResponseWriter, r *http.Request) {
+	w.Write([]byte(`Hello image router`))
 }

@@ -1,0 +1,6 @@
+version: 1
+
+storage:
+  images_dir: static/images
+  audios_dir: static/audios
+  videos_dir: static/vidoes
