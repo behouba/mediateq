@@ -1,9 +1,10 @@
 package main
 
 import (
+	"log"
 	"net/http"
 
-	"github.com/behouba/stash/image"
+	"github.com/behouba/stash/routing"
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
 )
@@ -14,7 +15,12 @@ func main() {
 
 	router.Use(middleware.Logger)
 
-	image.Setup(router)
+	routing.Setup(router)
 
-	http.ListenAndServe(":8080", router)
+	log.Printf("Starting stash %s server at %s", "v0", ":8080")
+
+	if err := http.ListenAndServe(":8080", router); err != nil {
+		log.Fatal(err)
+	}
+
 }
