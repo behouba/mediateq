@@ -26,6 +26,7 @@ type FileDatabase interface {
 	Delete(ctx context.Context, id string) error
 }
 
+// FileStorage is an abstration of place where files are stored
 type FileStorage interface {
 	Write(ctx context.Context, buff []byte, filename string) (url string, err error)
 	Remove(ctx context.Context, path string) error

@@ -24,3 +24,17 @@ sudo apt-get install -y libvips
 ```
 
 For other operating systems check [libvips install](https://libvips.github.io/libvips/install.html) instructions
+
+
+### build stashd
+
+To build stashd you can run the build.sh script
+```bash
+./build.sh
+```
+
+### Run stashd
+
+```bash
+./bin/stashd
+```
