@@ -1,6 +1,6 @@
 # mediateq
 
-Media is a file storage REST API micro-service.
+mediateq is a file storage REST API micro-service.
 
 ## Dependencies
 
@@ -28,16 +28,16 @@ sudo apt-get install -y libvips
 
 For other operating systems check [libvips install](https://libvips.github.io/libvips/install.html) instructions
 
-### build mediateqd
+### build mediateq
 
-To build mediateqd you can run the build.sh script
+To build mediateq you can run the build.sh script
 
 ```bash
 ./build.sh
 ```
 
-### Run mediateqd
+### Run mediateq
 
 ```bash
-./bin/mediateqd
+./bin/mediateq
 ```

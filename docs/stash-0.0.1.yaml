@@ -4,7 +4,7 @@ servers:
   - description:  mediateq API example server
     url: https://yourdomain.com/mediateq/v0
 info:
-  description: mediateq is a file storage REST API server
+  description: mediateq is a file storage REST API micro-service
   version: "0.0.1"
   title: mediateq API
   contact:
@@ -14,13 +14,13 @@ info:
     url: 'http://www.apache.org/licenses/LICENSE-2.0.html'
 tags:
   - name: images
-    description: Images files related operations
+    description: Images files related endpoints
   - name: documents
-    description: Documents files related operations
+    description: Documents files related endpoints
   - name: audios
-    description: Audios files related operations
+    description: Audios files related endpoints
   - name: videos
-    description: Videos files related operations
+    description: Videos files related endpoints
 paths:
   /info:
     get:
@@ -145,7 +145,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/InventoryItem'
+              $ref: '#/components/schemas/File'
         description: Inventory item to add
     get:
       tags:
@@ -186,7 +186,7 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/InventoryItem'
+                  $ref: '#/components/schemas/File'
         '400':
           description: bad input parameter
 
@@ -208,7 +208,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/InventoryItem'
+              $ref: '#/components/schemas/File'
         description: Inventory item to add
     get:
       tags:
@@ -249,7 +249,7 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/InventoryItem'
+                  $ref: '#/components/schemas/File'
         '400':
           description: bad input parameter
 
@@ -271,7 +271,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/InventoryItem'
+              $ref: '#/components/schemas/File'
         description: Inventory item to add
     get:
       tags:
@@ -312,7 +312,7 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/InventoryItem'
+                  $ref: '#/components/schemas/File'
         '400':
           description: bad input parameter
 
@@ -361,39 +361,3 @@ components:
         "440X600":
           type: string
           example: https://api.example.com/audios/12022022/d701748f0851.png
-    InventoryItem:
-      type: object
-      required:
-        - id
-        - name
-        - manufacturer
-        - releaseDate
-      properties:
-        id:
-          type: string
-          format: uuid
-          example: d290f1ee-6c54-4b01-90e6-d701748f0851
-        name:
-          type: string
-          example: Widget Adapter
-        releaseDate:
-          type: string
-          format: date-time
-          example: '2016-08-29T09:12:33.001Z'
-        manufacturer:
-          $ref: '#/components/schemas/Manufacturer'
-    Manufacturer:
-      required:
-        - name
-      properties:
-        name:
-          type: string
-          example: ACME Corporation
-        homePage:
-          type: string
-          format: url
-          example: 'https://www.acme-corp.com'
-        phone:
-          type: string
-          example: 408-867-5309
-      type: object
