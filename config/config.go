@@ -1,6 +1,6 @@
 package config
 
-import "github.com/behouba/stash/storage"
+import "github.com/behouba/mediateq/storage"
 
 type Config struct {
 	Version string `yaml:"version" json:"version"`

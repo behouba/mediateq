@@ -1,12 +1,12 @@
 openapi: 3.0.0
 servers:
-  # Example domain to show how stash server base path may look like
-  - description:  Stash API example server
-    url: https://yourdomain.com/stash/v0
+  # Example domain to show how mediateq server base path may look like
+  - description:  mediateq API example server
+    url: https://yourdomain.com/mediateq/v0
 info:
-  description: Stash is a file storage REST API server
+  description: mediateq is a file storage REST API server
   version: "0.0.1"
-  title: Stash API
+  title: mediateq API
   contact:
     email: behouba@gmail.com
   license:

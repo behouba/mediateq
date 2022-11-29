@@ -6,7 +6,7 @@ import (
 	"os"
 	"testing"
 
-	"github.com/behouba/stash/storage"
+	"github.com/behouba/mediateq/storage"
 )
 
 func TestWrite(t *testing.T) {

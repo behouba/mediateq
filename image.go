@@ -1,4 +1,4 @@
-package stash
+package mediateq
 
 // ImageProcessor interface provides image processing methods
 type ImageProcessor interface {

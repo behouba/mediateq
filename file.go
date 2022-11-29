@@ -1,8 +1,8 @@
-package stash
+package mediateq
 
 import "context"
 
-// File is a representation of stash file.
+// File is a representation of mediateq file.
 type File struct {
 	ID        int    `json:"id"`
 	Type      string `json:"type"` // image, doc, audio, video
@@ -15,8 +15,8 @@ type File struct {
 	AltSizes map[string]string `json:"altSizes,omitempty"`
 }
 
-// FileDatabase interface represents the file storage operations.
-type FileDatabase interface {
+// Database interface represents the set of database operations.
+type Database interface {
 	// Save method save a file to the file storage
 	Save(ctx context.Context, f *File) error
 

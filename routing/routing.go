@@ -4,8 +4,8 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/behouba/stash"
-	"github.com/behouba/stash/config"
+	"github.com/behouba/mediateq"
+	"github.com/behouba/mediateq/config"
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
 )
@@ -15,8 +15,8 @@ const version = "v0"
 type mux struct {
 	cfg            *config.Config
 	handler        http.Handler
-	db             stash.FileDatabase
-	storage        stash.FileStorage
+	db             mediateq.Database
+	storage        mediateq.FileStorage
 	startTimestamp int64
 }
 
@@ -50,7 +50,7 @@ func Setup(r *chi.Mux) {
 		startTimestamp: time.Now().Unix(),
 	}
 
-	r.Route("/stash/"+version, func(r chi.Router) {
+	r.Route("/mediateq/"+version, func(r chi.Router) {
 
 		r.Get("/info", mux.infoHandler)
 	})

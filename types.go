@@ -1,4 +1,4 @@
-package stash
+package mediateq
 
 type fileType string
 

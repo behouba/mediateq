@@ -1,12 +1,15 @@
-# stash
-Stash is a file storage REST API server. 
+# mediateq
+
+Media is a file storage REST API micro-service.
 
 ## Dependencies
+
 - libvips 8.3+
 
 ## Installation
 
 ### Install libvips
+
 for mac:
 
 ```bash
@@ -25,16 +28,16 @@ sudo apt-get install -y libvips
 
 For other operating systems check [libvips install](https://libvips.github.io/libvips/install.html) instructions
 
+### build mediateqd
 
-### build stashd
+To build mediateqd you can run the build.sh script
 
-To build stashd you can run the build.sh script
 ```bash
 ./build.sh
 ```
 
-### Run stashd
+### Run mediateqd
 
 ```bash
-./bin/stashd
+./bin/mediateqd
 ```

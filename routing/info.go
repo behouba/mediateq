@@ -26,7 +26,7 @@ type stats struct {
 	Errors    int `json:"errors"`
 }
 
-// infoHandler handle request from /stash/info
+// infoHandler handle request from /mediateq/info
 func (m mux) infoHandler(w http.ResponseWriter, r *http.Request) {
 
 	info := m.getServerInfo()

@@ -6,7 +6,7 @@ import (
 	"os"
 	"path"
 
-	"github.com/behouba/stash/storage"
+	"github.com/behouba/mediateq/storage"
 )
 
 type storageManager struct {
