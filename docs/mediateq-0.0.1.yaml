@@ -1,0 +1,82 @@
+openapi: 3.0.0
+servers:
+  # Example domain to show how mediateq server base path may look like
+  - description:  mediateq API example server
+    url: https://yourdomain.com/mediateq/v0
+info:
+  description: mediateq is a file storage REST API micro-service
+  version: "0.0.1"
+  title: mediateq API
+  contact:
+    email: behouba@gmail.com
+  license:
+    name: Apache 2.0
+    url: 'http://www.apache.org/licenses/LICENSE-2.0.html'
+tags:
+  - name: upload
+    description: File upload endpoint
+paths:
+  /info:
+    get:
+      description: Get info about the server
+      responses:
+        '200':
+          description: Request succeded
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Info'
+  /upload:
+    post:
+      tags:
+        - upload
+      summary: File upload
+      operationId: uploadFile
+      description: Upload a single file to mediateq server
+      responses:
+        '201':
+          description: file uploaded
+        '400':
+          description: invalid input, file type is not an allowed
+        '500':
+          description: an internal server error occured
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/File'
+        description: Inventory item to add
+        
+components:
+  schemas:
+    Info:
+      type: object
+      properties:
+        host:
+          type: string
+          example: api.example.com
+        upTime:
+          type: integer
+          example: 2345234
+        version:
+          type: string
+          example: 1.0.0
+    File:
+      type: object
+      properties:
+        id:
+          type: string
+          example: d290f1ee-6c54-4b01-90e6-d701748f085
+        type:
+          type: string
+          enum:
+            - image
+            - document
+            - video
+            - audio
+        timestamp:
+          type: integer
+          example: 1651396874
+        url:
+          type: string
+          example: https://api.example.com/audios/12022022/d701748f0851.png

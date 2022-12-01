@@ -1,12 +1,5 @@
 package routing
 
-import (
-	"encoding/json"
-	"fmt"
-	"net/http"
-	"time"
-)
-
 // serverInfo provides basic status informations about the server
 type serverInfo struct {
 	Version          string   `json:"version"`
@@ -24,36 +17,4 @@ type stats struct {
 	Documents int `json:"documents"`
 	Audios    int `json:"audios"`
 	Errors    int `json:"errors"`
-}
-
-// infoHandler handle request from /mediateq/info
-func (m mux) infoHandler(w http.ResponseWriter, r *http.Request) {
-
-	info := m.getServerInfo()
-
-	bs, err := json.Marshal(info)
-	if err != nil {
-		w.Write([]byte(`Error` + err.Error()))
-		return
-	}
-
-	w.Write(bs)
-}
-
-func (m mux) getServerInfo() serverInfo {
-
-	return serverInfo{
-		Version:          "0.0.1",
-		Host:             "localhost",
-		Uptime:           fmt.Sprintf("%d second(s)", time.Now().Unix()-m.startTimestamp),
-		AllowedFileTypes: []string{"images", "videos", "audios", "documents"},
-		Stats: stats{
-			Images:    134,
-			Videos:    0,
-			Documents: 23,
-			Audios:    0,
-			Errors:    5,
-		},
-		AutorizedDomains: []string{"localhost"},
-	}
 }

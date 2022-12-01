@@ -1,6 +1,16 @@
-version: 1
+version: 0
 
-storage:
-  images_dir: static/images
-  audios_dir: static/audios
-  videos_dir: static/vidoes
+domain: http://localhost:8080
+
+max_file_size: 10000
+
+allowed_file_types:
+  image: true
+  audio: true
+  video: true
+  all: false
+
+static_dirs:
+  image: images
+  audio: audios
+  video: vidoes

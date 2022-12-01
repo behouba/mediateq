@@ -28,6 +28,8 @@ sudo apt-get install -y libvips
 
 For other operating systems check [libvips install](https://libvips.github.io/libvips/install.html) instructions
 
+### Testing
+
 ### build mediateq
 
 To build mediateq you can run the build.sh script
@@ -41,3 +43,5 @@ To build mediateq you can run the build.sh script
 ```bash
 ./bin/mediateq
 ```
+
+### Docker container

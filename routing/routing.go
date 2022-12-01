@@ -1,58 +1,29 @@
 package routing
 
 import (
-	"net/http"
-	"time"
-
 	"github.com/behouba/mediateq"
-	"github.com/behouba/mediateq/config"
-	"github.com/go-chi/chi/v5"
-	"github.com/go-chi/chi/v5/middleware"
+	"github.com/gin-gonic/gin"
 )
 
 const version = "v0"
 
-type mux struct {
-	cfg            *config.Config
-	handler        http.Handler
-	db             mediateq.Database
-	storage        mediateq.FileStorage
-	startTimestamp int64
-}
+func Setup(storage mediateq.Storage, db mediateq.Database) {
 
-func NewMux() *mux {
+	router := gin.Default()
 
-	r := chi.NewMux()
+	mediateq := router.Group("/mediateq/" + version)
 
-	Setup(r)
-
-	return &mux{
-		cfg:            &config.Config{},
-		handler:        r,
-		db:             nil,
-		storage:        nil,
-		startTimestamp: time.Now().Unix(),
-	}
-}
-
-func Setup(r *chi.Mux) {
-
-	r.Use(middleware.RequestID)
-	r.Use(middleware.RealIP)
-	r.Use(middleware.Logger)
-	r.Use(middleware.Recoverer)
-
-	mux := mux{
-		cfg:            &config.Config{},
-		handler:        r,
-		db:             nil,
-		storage:        nil,
-		startTimestamp: time.Now().Unix(),
+	{
+		mediateq.GET("/info", getServerInfo(db))
+		mediateq.POST("/upload", upload(storage, db))
 	}
 
-	r.Route("/mediateq/"+version, func(r chi.Router) {
+}
 
-		r.Get("/info", mux.infoHandler)
-	})
+func getServerInfo(db mediateq.Database) gin.HandlerFunc {
+	return func(ctx *gin.Context) {}
+}
 
+func upload(storage mediateq.Storage, db mediateq.Database) gin.HandlerFunc {
+	return func(ctx *gin.Context) {}
 }
