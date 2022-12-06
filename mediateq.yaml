@@ -2,13 +2,21 @@ version: 0
 
 domain: http://localhost:8080
 
-max_file_size: 10000
 
-allowed_file_types:
-  image: true
-  audio: true
-  video: true
-  all: false
+image_config:
+  allowed: true
+  max_file_size: 10000
+  default_size:
+    width: 1400
+    height: 0
+
+audio_config:
+  allowed: false
+
+video_config:
+  allowed: false
+
+
 
 static_dirs:
   image: images

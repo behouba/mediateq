@@ -15,7 +15,7 @@ func Setup(storage mediateq.Storage, db mediateq.Database) {
 
 	{
 		mediateq.GET("/info", getServerInfo(db))
-		mediateq.POST("/upload", upload(storage, db))
+		mediateq.POST("/upload", uploadFile(storage, db))
 	}
 
 }
@@ -24,6 +24,6 @@ func getServerInfo(db mediateq.Database) gin.HandlerFunc {
 	return func(ctx *gin.Context) {}
 }
 
-func upload(storage mediateq.Storage, db mediateq.Database) gin.HandlerFunc {
+func uploadFile(storage mediateq.Storage, db mediateq.Database) gin.HandlerFunc {
 	return func(ctx *gin.Context) {}
 }
