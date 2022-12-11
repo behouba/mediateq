@@ -1,0 +1,9 @@
+
+CREATE TABLE IF NOT EXISTS "media" (
+    "nid" BIGSERIAL PRIMARY KEY,
+    "id" TEXT NOT NULL UNIQUE,
+    "url" TEXT NOT NULL UNIQUE,
+    "type" TEXT NOT NULL,
+    "timestamp" BIGINT NOT NULL,
+    "size" BIGINT NOT NULL
+)

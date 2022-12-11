@@ -5,9 +5,10 @@ type Config struct {
 	Version     string      `yaml:"version" json:"version"`
 	Domain      string      `yaml:"domain" json:"domain"`
 	MaxFileSize int         `yaml:"max_file_size" json:"max_file_size"`
-	ImageConfig ImageConfig `yaml:"image_config"`
-	AudioConfig FileConfig  `yaml:"audio_config"`
-	VideoConfig FileConfig  `yaml:"video_config"`
+	DB          *DBConfig   `yaml:"db"`
+	Image       ImageConfig `yaml:"image"`
+	Audio       FileConfig  `yaml:"audio"`
+	Video       FileConfig  `yaml:"video"`
 }
 
 // FileConfig represent configuration data for a given type of file
@@ -29,4 +30,17 @@ type ImageConfig struct {
 type ImageSize struct {
 	Width  int `yaml:"width"`
 	Height int `yaml:"height"`
+}
+
+type DBConfig struct {
+	Host     string `yaml:"host"`
+	Port     int    `yaml:"port"`
+	DBName   string `yaml:"db_name"`
+	Username string `yaml:"username"`
+	Password string `yaml:"password"`
+}
+
+type StorageConfig struct {
+	ImagePath string
+	AudioPath string
 }

@@ -1,4 +1,4 @@
-package local
+package localdisk
 
 import (
 	"context"
@@ -6,29 +6,29 @@ import (
 	"os"
 	"path"
 
-	"github.com/behouba/mediateq/storage"
+	"github.com/behouba/mediateq"
 )
 
-type storageManager struct {
-	cfg *storage.Config
+type storage struct {
+	cfg *mediateq.StorageConfig
 }
 
-func NewstorageManager(cfg *storage.Config) (*storageManager, error) {
+func Newstorage(cfg *mediateq.StorageConfig) (*storage, error) {
 
-	if err := os.MkdirAll(cfg.ImagesDir, fs.ModePerm); err != nil {
+	if err := os.MkdirAll(cfg.ImagePath, fs.ModePerm); err != nil {
 		return nil, err
 	}
 
-	if err := os.MkdirAll(cfg.AudiosDir, fs.ModePerm); err != nil {
+	if err := os.MkdirAll(cfg.AudioPath, fs.ModePerm); err != nil {
 		return nil, err
 	}
 
-	return &storageManager{cfg}, nil
+	return &storage{cfg}, nil
 }
 
-func (s storageManager) Write(ctx context.Context, buff []byte, filename string) (filePath string, err error) {
+func (s storage) Write(ctx context.Context, buff []byte, filename string) (filePath string, err error) {
 
-	filePath = path.Join(s.cfg.ImagesDir, filename)
+	filePath = path.Join(s.cfg.ImagePath, filename)
 
 	file, err := os.Create(filePath)
 	if err != nil {
@@ -45,6 +45,6 @@ func (s storageManager) Write(ctx context.Context, buff []byte, filename string)
 	return filePath, nil
 }
 
-func (s storageManager) Remove(ctx context.Context, path string) error {
+func (s storage) Remove(ctx context.Context, path string) error {
 	return nil
 }
