@@ -1,21 +1,23 @@
-version: 0
+version: v0
 
 port: 8080
 
 domain: http://localhost:8080
 
+auth_required: true
 
-image_config:
+
+image:
   allowed: true
   max_file_size: 10000
   default_size:
     width: 1400
     height: 0
 
-audio_config:
+audio:
   allowed: false
 
-video_config:
+video:
   allowed: false
 
 

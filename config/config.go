@@ -8,29 +8,23 @@ import (
 
 // Configuration object of mediateq server
 type Mediateq struct {
-	Version     string    `yaml:"version" json:"version"`
-	Port        int       `yaml:"port"`
-	Domain      string    `yaml:"domain" json:"domain"`
-	MaxFileSize int       `yaml:"max_file_size" json:"max_file_size"`
-	Database    *Database `yaml:"database"`
-	Storage     *Storage  `yaml:"storage"`
-	Image       Image     `yaml:"image"`
-	Audio       File      `yaml:"audio"`
-	Video       File      `yaml:"video"`
+	Version  string    `yaml:"version" json:"version"`
+	Port     int       `yaml:"port"`
+	Domain   string    `yaml:"domain" json:"domain"`
+	Database *Database `yaml:"database"`
+	Storage  *Storage  `yaml:"storage"`
+	Image    *File     `yaml:"image"`
+	Audio    *File     `yaml:"audio"`
+	Video    *File     `yaml:"video"`
 }
 
 // File represent configuration data for a given type of file
 type File struct {
-	Allowed     bool      `yaml:"allowed"`
-	MaxFileSize int       `yaml:"max_file_size"`
-	DefaultSize ImageSize `yaml:"image_size"`
-	StorageDir  string    `yaml:"storage_dir"`
-}
-
-// Image represent configuration data specific to image files
-type Image struct {
-	File
-	ThumbnailSizes []ImageSize `yaml:"thumbnail_sizes"`
+	Allowed        bool        `yaml:"allowed"`
+	MaxFileSize    int         `yaml:"max_file_size"`
+	DefaultSize    ImageSize   `yaml:"image_size"`
+	StorageDir     string      `yaml:"storage_dir"`
+	ThumbnailSizes []ImageSize `yaml:"thumbnail_sizes,omitempty"`
 }
 
 // ImageSize represent a size of an image. To preserve aspect ratio of the original image

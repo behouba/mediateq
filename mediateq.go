@@ -2,12 +2,12 @@ package mediateq
 
 import "context"
 
-type fileType string
+type MediaType string
 
 const (
-	FileTypeImage fileType = "image"
-	FileTypeAudio fileType = "audio"
-	FileTypeVideo fileType = "video"
+	MediaTypeImage MediaType = "image"
+	MediaTypeAudio MediaType = "audio"
+	MediaTypeVideo MediaType = "video"
 )
 
 // ImageProcessor interface provides image processing methods

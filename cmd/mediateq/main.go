@@ -1,6 +1,7 @@
 package main
 
 import (
+	"flag"
 	"fmt"
 	"log"
 	"net/http"
@@ -9,12 +10,17 @@ import (
 	"github.com/behouba/mediateq/routing"
 )
 
-const ()
+var (
+	configFileFlag = flag.String("config", "mediateq.yaml", "This flag is used to specify the location of the configuration file for the application. The default value for this flag is \"mediateq.yaml\".")
+)
 
 func main() {
 
+	// Parse the command line arguments
+	flag.Parse()
+
 	// Load configuration
-	cfg, err := config.Load("mediateq.yaml")
+	cfg, err := config.Load(*configFileFlag)
 	if err != nil {
 		log.Fatal(err)
 	}
