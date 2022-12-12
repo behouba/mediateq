@@ -27,17 +27,6 @@ type Media struct {
 	Size      int64  `json:"size"`      // Size of the file
 }
 
-// Database interface represents the set of database operations.
-type Database interface {
-	// Save method save a file to the file storage
-	Save(ctx context.Context, m *Media) error
-
-	// Get method retreive a file object with given id from file storage
-	Get(ctx context.Context, id string) (Media, error)
-	// Delete method delete a file with the given id from file storage
-	Delete(ctx context.Context, id string) error
-}
-
 // Storage is an abstration of place where files are stored
 type Storage interface {
 	Write(ctx context.Context, buff []byte, filename string) (path string, err error)

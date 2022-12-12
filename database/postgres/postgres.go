@@ -1,29 +1,19 @@
 package postgres
 
 import (
-	"context"
-
-	"github.com/behouba/mediateq"
+	"github.com/behouba/mediateq/config"
+	"github.com/behouba/mediateq/database/schema"
 )
 
-func NewDatabase(cfg *mediateq.DBConfig) (mediateq.Database, error) {
-	return DB{}, nil
-}
+// NewDatabase create a new postgres database
+func NewDatabase(cfg *config.Database) (*schema.Database, error) {
 
-type DB struct {
-}
+	mediaTable, err := newMediaTable(nil)
+	if err != nil {
+		return nil, err
+	}
 
-// Delete implements mediateq.Database
-func (DB) Delete(ctx context.Context, id string) error {
-	panic("unimplemented")
-}
-
-// Get implements mediateq.Database
-func (DB) Get(ctx context.Context, id string) (mediateq.Media, error) {
-	panic("unimplemented")
-}
-
-// Save implements mediateq.Database
-func (DB) Save(ctx context.Context, m *mediateq.Media) error {
-	panic("unimplemented")
+	return &schema.Database{
+		MediaTable: mediaTable,
+	}, nil
 }

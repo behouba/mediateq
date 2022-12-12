@@ -4,12 +4,14 @@ import (
 	"net/http"
 
 	"github.com/behouba/mediateq"
+	"github.com/behouba/mediateq/config"
+	"github.com/behouba/mediateq/database/schema"
 	"github.com/gin-gonic/gin"
 )
 
 const version = "v0"
 
-func Setup(cfg *mediateq.Config, storage mediateq.Storage, db mediateq.Database) {
+func NewHandler(cfg *config.Mediateq, storage mediateq.Storage, db *schema.Database) (http.Handler, error) {
 
 	router := gin.Default()
 
@@ -20,9 +22,10 @@ func Setup(cfg *mediateq.Config, storage mediateq.Storage, db mediateq.Database)
 		mediateq.POST("/upload", uploadFile(storage, db))
 	}
 
+	return router, nil
 }
 
-func getServerInfo(cfg *mediateq.Config, db mediateq.Database) gin.HandlerFunc {
+func getServerInfo(cfg *config.Mediateq, db *schema.Database) gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 
 		ctx.JSON(http.StatusOK, serverInfo{
@@ -36,7 +39,7 @@ func getServerInfo(cfg *mediateq.Config, db mediateq.Database) gin.HandlerFunc {
 	}
 }
 
-func uploadFile(storage mediateq.Storage, db mediateq.Database) gin.HandlerFunc {
+func uploadFile(storage mediateq.Storage, db *schema.Database) gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 
 	}

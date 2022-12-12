@@ -1,5 +1,7 @@
 version: 0
 
+port: 8080
+
 domain: http://localhost:8080
 
 

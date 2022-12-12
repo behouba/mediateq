@@ -6,14 +6,14 @@ import (
 	"os"
 	"path"
 
-	"github.com/behouba/mediateq"
+	"github.com/behouba/mediateq/config"
 )
 
 type storage struct {
-	cfg *mediateq.StorageConfig
+	cfg *config.Storage
 }
 
-func Newstorage(cfg *mediateq.StorageConfig) (*storage, error) {
+func Newstorage(cfg *config.Storage) (*storage, error) {
 
 	if err := os.MkdirAll(cfg.ImagePath, fs.ModePerm); err != nil {
 		return nil, err
