@@ -1,21 +1,48 @@
 package config
 
 import (
+	"fmt"
 	"io/ioutil"
 
+	"github.com/behouba/mediateq"
 	"gopkg.in/yaml.v2"
 )
 
-// Configuration object of mediateq server
+var (
+	// Lookup map to quickly check content types supported by the current mediateq server
+	supportedContentTypes = map[mediateq.ContentType]bool{
+		mediateq.ContentTypeJPEG: true,
+		mediateq.ContentTypePNG:  true,
+		mediateq.ContentTypeGIF:  true,
+		mediateq.ContentTypeBIMP: true,
+		mediateq.ContentTypeWEBP: true,
+	}
+)
+
+// Mediateq is the global configuration object of mediateq server
 type Mediateq struct {
-	Version  string    `yaml:"version" json:"version"`
-	Port     int       `yaml:"port"`
-	Domain   string    `yaml:"domain" json:"domain"`
-	Database *Database `yaml:"database"`
-	Storage  *Storage  `yaml:"storage"`
-	Image    *File     `yaml:"image"`
-	Audio    *File     `yaml:"audio"`
-	Video    *File     `yaml:"video"`
+	Version             string                 `yaml:"version"`
+	Port                int                    `yaml:"port"`
+	Domain              string                 `yaml:"domain"`
+	Database            *Database              `yaml:"database"`
+	Storage             *Storage               `yaml:"storage"`
+	AllowedContentTypes []mediateq.ContentType `yaml:"allowed_content_types"`
+	MaxFileSizeBytes    int64                  `yaml:"max_file_size_bytes"`
+	Image               *File                  `yaml:"image"`
+	Audio               *File                  `yaml:"audio"`
+	Video               *File                  `yaml:"video"`
+}
+
+// IsContentTypeAllowed function searches the
+// allowed content Types slice for the given content type and
+// returns true if it is found, or false if it is not.
+func (m *Mediateq) IsContentTypeAllowed(contentType mediateq.ContentType) bool {
+	for _, ct := range m.AllowedContentTypes {
+		if ct == contentType {
+			return true
+		}
+	}
+	return false
 }
 
 // File represent configuration data for a given type of file
@@ -61,6 +88,13 @@ func Load(filename string) (*Mediateq, error) {
 	err = yaml.Unmarshal(data, &cfg)
 	if err != nil {
 		return nil, err
+	}
+
+	// Check that allowed content types are all supported
+	for _, act := range cfg.AllowedContentTypes {
+		if supported := supportedContentTypes[act]; !supported {
+			return nil, fmt.Errorf("content type %s is not supported by this version of mediateq", act)
+		}
 	}
 
 	return &cfg, nil

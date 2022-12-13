@@ -1,13 +1,19 @@
 package mediateq
 
-import "context"
+import (
+	"context"
+)
 
-type MediaType string
+// ContentType represents HTTP MIME types sent in Content-type header
+type ContentType string
 
 const (
-	MediaTypeImage MediaType = "image"
-	MediaTypeAudio MediaType = "audio"
-	MediaTypeVideo MediaType = "video"
+	// Supported content types for images
+	ContentTypeJPEG ContentType = "image/jpeg"
+	ContentTypePNG  ContentType = "image/png"
+	ContentTypeGIF  ContentType = "image/gif"
+	ContentTypeBIMP ContentType = "image/bimg"
+	ContentTypeWEBP ContentType = "image/webp"
 )
 
 // ImageProcessor interface provides image processing methods
@@ -19,12 +25,15 @@ type ImageProcessor interface {
 
 // Media is a representation of mediateq file.
 type Media struct {
-	NID       int    `json:"nid"`       // Numeric id (db primary key)
-	ID        string `json:"id"`        // Unique string identifier of the file
-	Type      string `json:"type"`      // image, doc, audio, video
-	URL       string `json:"url"`       // url to access the file over internet
-	Timestamp int64  `json:"timestamp"` // File creation timestamp
-	Size      int64  `json:"size"`      // Size of the file
+	NID               int         `json:"nid"`         // Numeric id (db primary key)
+	ID                string      `json:"id"`          // Unique string identifier of the file
+	URL               string      `json:"url"`         // url to access the file over internet
+	Origin            string      `json:"origin"`      // Origin domain of the file
+	ContentType       ContentType `json:"contentType"` //
+	Size              int64       `json:"size"`        // Size of the file in bytes
+	CreationTimestamp uint64      `json:"creationTimestamp"`
+	UploadName        string      `json:"uploadName"` // Media file upload name
+	Base64Hash        string      `json:"base64Hash"`
 }
 
 // Storage is an abstration of place where files are stored
