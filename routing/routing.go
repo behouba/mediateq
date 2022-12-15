@@ -5,12 +5,15 @@ import (
 	"time"
 
 	"github.com/behouba/mediateq"
-	"github.com/behouba/mediateq/config"
 	"github.com/behouba/mediateq/database/schema"
+	"github.com/behouba/mediateq/pkg/config"
 	"github.com/gin-gonic/gin"
 )
 
-func NewHandler(cfg *config.Mediateq, storage mediateq.Storage, db *schema.Database) (http.Handler, error) {
+// apiVersion is a string representation of the current mediateq server version
+const apiVersion = "v0"
+
+func NewHandler(cfg *config.Config, storage mediateq.Storage, db *schema.Database) (http.Handler, error) {
 
 	router := gin.Default()
 
@@ -21,7 +24,7 @@ func NewHandler(cfg *config.Mediateq, storage mediateq.Storage, db *schema.Datab
 		StartTime: &time.Time{},
 	}
 
-	mediateq := router.Group("/mediateq/" + cfg.Version)
+	mediateq := router.Group("/mediateq/" + apiVersion)
 
 	{
 		mediateq.GET("/info", getServerInfo(&srvInfo, db))

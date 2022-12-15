@@ -3,9 +3,9 @@ package database
 import (
 	"fmt"
 
-	"github.com/behouba/mediateq/config"
 	"github.com/behouba/mediateq/database/postgres"
 	"github.com/behouba/mediateq/database/schema"
+	"github.com/behouba/mediateq/pkg/config"
 )
 
 type dbType string

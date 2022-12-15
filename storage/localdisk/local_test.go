@@ -6,12 +6,12 @@ import (
 	"os"
 	"testing"
 
-	"github.com/behouba/mediateq/config"
+	"github.com/behouba/mediateq/pkg/config"
 )
 
 func TestWrite(t *testing.T) {
 
-	cfg := config.Storage{ImagePath: "static/images", AudioPath: "static/audio"}
+	cfg := config.Storage{UploadPath: "upload/"}
 	storage, err := Newstorage(&cfg)
 	if err != nil {
 		t.Fatal(err)

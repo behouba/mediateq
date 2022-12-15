@@ -4,8 +4,12 @@ port: 8080
 
 domain: http://localhost:8080
 
-auth_required: true
-
+database:
+  host: localhost
+  port: 5400
+  db_name: mediateq
+  username: behouba
+  password: password
 
 max_file_size_bytes: 10000000
 

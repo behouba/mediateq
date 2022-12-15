@@ -6,7 +6,7 @@ import (
 	"os"
 	"path"
 
-	"github.com/behouba/mediateq/config"
+	"github.com/behouba/mediateq/pkg/config"
 )
 
 type storage struct {
@@ -15,11 +15,11 @@ type storage struct {
 
 func Newstorage(cfg *config.Storage) (*storage, error) {
 
-	if err := os.MkdirAll(cfg.ImagePath, fs.ModePerm); err != nil {
+	if err := os.MkdirAll(cfg.UploadPath, fs.ModePerm); err != nil {
 		return nil, err
 	}
 
-	if err := os.MkdirAll(cfg.AudioPath, fs.ModePerm); err != nil {
+	if err := os.MkdirAll(cfg.UploadPath, fs.ModePerm); err != nil {
 		return nil, err
 	}
 
@@ -28,7 +28,7 @@ func Newstorage(cfg *config.Storage) (*storage, error) {
 
 func (s storage) Write(ctx context.Context, buff []byte, filename string) (filePath string, err error) {
 
-	filePath = path.Join(s.cfg.ImagePath, filename)
+	filePath = path.Join(s.cfg.UploadPath, filename)
 
 	file, err := os.Create(filePath)
 	if err != nil {

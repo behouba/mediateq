@@ -6,13 +6,17 @@ import (
 	"log"
 	"net/http"
 
-	"github.com/behouba/mediateq/config"
+	"github.com/behouba/mediateq/pkg/config"
 	"github.com/behouba/mediateq/routing"
 )
 
 var (
 	configFileFlag = flag.String("config", "mediateq.yaml", "This flag is used to specify the location of the configuration file for the application. The default value for this flag is \"mediateq.yaml\".")
 )
+
+func run() {
+
+}
 
 func main() {
 

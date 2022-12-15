@@ -2,10 +2,6 @@ github.com/creack/pty v1.1.9/go.mod h1:oKZEueFk5CKHvIhNR5MUki03XCEU+Q6VDXinZuGJ3
 github.com/davecgh/go-spew v1.1.0/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=
 github.com/davecgh/go-spew v1.1.1 h1:vj9j/u1bqnvCEfJOwUhtlOARqs3+rkHYY13jYWTU97c=
 github.com/davecgh/go-spew v1.1.1/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=
-github.com/digitalcore-ci/jsonutil v0.0.0-20221213135709-42f4670260a1 h1:3C1RvpMOTIeCEi9lfwNZ4GzsF/1VOA96jMsv9X8udUs=
-github.com/digitalcore-ci/jsonutil v0.0.0-20221213135709-42f4670260a1/go.mod h1:LNTVl9/EmiNGlJS+1juufT1GUsTvv3Ao6h0VUzPsyd8=
-github.com/digitalcore-ci/jsonutil v0.0.0-20221213141136-bf78ab9db0ed h1:hN0u0kreUhtp/DzbAh8vpJqI+aqLqgwTqzVQxDhvBvw=
-github.com/digitalcore-ci/jsonutil v0.0.0-20221213141136-bf78ab9db0ed/go.mod h1:LNTVl9/EmiNGlJS+1juufT1GUsTvv3Ao6h0VUzPsyd8=
 github.com/digitalcore-ci/jsonutil v0.0.0-20221214162000-d89d64a3abe4 h1:mV4QQQPJkrkA6qNYjuiGpVRa38jG9qzitxV+V/kf+Kg=
 github.com/digitalcore-ci/jsonutil v0.0.0-20221214162000-d89d64a3abe4/go.mod h1:LNTVl9/EmiNGlJS+1juufT1GUsTvv3Ao6h0VUzPsyd8=
 github.com/gin-contrib/sse v0.1.0 h1:Y/yl/+YNO8GZSjAhjMsSuLt29uWRFHdHYUb5lYOV9qE=

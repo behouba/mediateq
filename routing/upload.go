@@ -6,8 +6,8 @@ import (
 	"net/http"
 
 	"github.com/behouba/mediateq"
-	"github.com/behouba/mediateq/config"
 	"github.com/behouba/mediateq/database/schema"
+	"github.com/behouba/mediateq/pkg/config"
 	"github.com/digitalcore-ci/jsonutil"
 	"github.com/gin-gonic/gin"
 )
@@ -17,7 +17,7 @@ type uploadRequest struct {
 }
 
 // Validate check that upload request is valid according the server configuration
-func (req uploadRequest) Validate(cfg *config.Mediateq) *jsonutil.Error {
+func (req uploadRequest) Validate(cfg *config.Config) *jsonutil.Error {
 	// Check file size
 	if req.Media.Size > cfg.MaxFileSizeBytes {
 		return jsonutil.MaxFileSizeExcedeedError(
@@ -35,7 +35,7 @@ func (req uploadRequest) Validate(cfg *config.Mediateq) *jsonutil.Error {
 	return nil
 }
 
-func upload(cfg *config.Mediateq, storage mediateq.Storage, db *schema.Database) gin.HandlerFunc {
+func upload(cfg *config.Config, storage mediateq.Storage, db *schema.Database) gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 
 		req := uploadRequest{

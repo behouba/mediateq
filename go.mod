@@ -3,12 +3,12 @@ module github.com/behouba/mediateq
 go 1.18
 
 require (
+	github.com/digitalcore-ci/jsonutil v0.0.0-20221214162000-d89d64a3abe4
 	github.com/gin-gonic/gin v1.8.1
-	gopkg.in/yaml.v2 v2.4.0
+	gopkg.in/yaml.v3 v3.0.1
 )
 
 require (
-	github.com/digitalcore-ci/jsonutil v0.0.0-20221214162000-d89d64a3abe4 // indirect
 	github.com/gin-contrib/sse v0.1.0 // indirect
 	github.com/go-playground/locales v0.14.0 // indirect
 	github.com/go-playground/universal-translator v0.18.0 // indirect
@@ -26,4 +26,5 @@ require (
 	golang.org/x/sys v0.2.0 // indirect
 	golang.org/x/text v0.4.0 // indirect
 	google.golang.org/protobuf v1.28.1 // indirect
+	gopkg.in/yaml.v2 v2.4.0 // indirect
 )

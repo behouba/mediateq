@@ -1,8 +1,8 @@
 package postgres
 
 import (
-	"github.com/behouba/mediateq/config"
 	"github.com/behouba/mediateq/database/schema"
+	"github.com/behouba/mediateq/pkg/config"
 )
 
 // NewDatabase create a new postgres database
