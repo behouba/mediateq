@@ -1,7 +1,11 @@
 package routing
 
 import (
+	"crypto/sha256"
+	"encoding/base64"
 	"fmt"
+	"io"
+	"io/ioutil"
 	"log"
 	"net/http"
 
@@ -9,6 +13,7 @@ import (
 	"github.com/behouba/mediateq/pkg/config"
 	"github.com/digitalcore-ci/jsonutil"
 	"github.com/gin-gonic/gin"
+	"github.com/sirupsen/logrus"
 )
 
 // extractAndValidateMedia extract data of the media file to be uploaded
@@ -44,16 +49,42 @@ func extractAndValidateMedia(ctx *gin.Context, cfg *config.Config) (*mediateq.Me
 // This function handle uploading files to the server
 func (h handler) upload(ctx *gin.Context) {
 
-	media, err := extractAndValidateMedia(ctx, h.config)
-	if err != nil {
-		ctx.JSON(http.StatusBadRequest, err)
+	media, respErr := extractAndValidateMedia(ctx, h.config)
+	if respErr != nil {
+		ctx.JSON(http.StatusBadRequest, respErr)
 		return
 	}
 
-	// reqBody := io.LimitReader(ctx.Request.Body, h.config.MaxFileSizeBytes)
+	buffer, hash, err := parseRequestBody(ctx.Request.Body, h.config.MaxFileSizeBytes, h.logger)
+	if err != nil {
+		ctx.JSON(http.StatusInternalServerError, jsonutil.InternalServerError())
+		return
+	}
+
+	h.storage.Write(ctx, buffer, hash)
 
 	// TODO: write to local disk or cloud depending on server configuration
 
 	log.Println(media)
 
+}
+
+func parseRequestBody(
+	r io.Reader, maxFileSizeBytes int64, logger *logrus.Logger,
+) (buffer []byte, hash string, err error) {
+
+	body := io.LimitReader(r, maxFileSizeBytes)
+
+	buffer, err = ioutil.ReadAll(body)
+	if err != nil {
+		logger.Info("Failed to read upload request body: " + err.Error())
+		return
+	}
+
+	hasher := sha256.New()
+	io.TeeReader(body, hasher)
+
+	hash = base64.RawURLEncoding.EncodeToString(hasher.Sum(nil)[:])
+
+	return
 }

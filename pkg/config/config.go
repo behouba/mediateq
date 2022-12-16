@@ -108,6 +108,7 @@ type ImageSize struct {
 }
 
 type Database struct {
+	Type     string `yaml:"type"`
 	Host     string `yaml:"host"`
 	Port     int    `yaml:"port"`
 	DBName   string `yaml:"db_name"`
@@ -116,7 +117,8 @@ type Database struct {
 }
 
 type Storage struct {
-	UploadPath string `yaml:"upload_path"` // Path to the folder were files should be uploaded
+	UploadPath string               `yaml:"upload_path"` // Path to the folder were files should be uploaded
+	Type       mediateq.StorageType `yaml:"type"`        // The type of storage used by the to read and write files
 }
 
 // Load loads mediateq configuration from yaml file

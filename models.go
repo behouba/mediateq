@@ -7,6 +7,12 @@ import (
 // ContentType represents HTTP MIME types sent in Content-type header
 type ContentType string
 
+// StorageType represents type of storage where media are stored
+type StorageType string
+
+// DB type represents the type of database used by the server
+type DBType string
+
 const (
 	// Supported content types for images
 	ContentTypeJPEG ContentType = "image/jpeg"
@@ -14,6 +20,14 @@ const (
 	ContentTypeGIF  ContentType = "image/gif"
 	ContentTypeBIMP ContentType = "image/bimg"
 	ContentTypeWEBP ContentType = "image/webp"
+
+	// Storage type options
+	StorageTypeLocalDisk StorageType = "localdisk"
+	StorageTypeS3        StorageType = "s3"
+
+	// Database options
+	DBTypePostgres DBType = "postgres"
+	DBTypeSQLite   DBType = "sqlite"
 )
 
 // ImageProcessor interface provides image processing methods

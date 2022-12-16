@@ -5,10 +5,11 @@ port: 8080
 domain: http://localhost:8080
 
 database:
+  type: postgres
   host: localhost
   port: 5400
   db_name: mediateq
-  username: behouba
+  username: mediateq
   password: password
 
 max_file_size_bytes: 10000000
@@ -19,22 +20,6 @@ allowed_content_types:
   - image/bimg
   - image/webp
 
-image:
-  allowed: true
-  max_file_size: 10000
-  default_size:
-    width: 1400
-    height: 0
-
-audio:
-  allowed: false
-
-video:
-  allowed: false
-
-
-
-static_dirs:
-  image: images
-  audio: audios
-  video: vidoes
+storage:
+  type: localdisk
+  upload_path: upload/
