@@ -41,7 +41,7 @@ To build mediateq you can run the build.sh script
 ### Run mediateq
 
 ```bash
-./bin/mediateq
+./bin/mediateq -config=mediateq.yaml
 ```
 
 ### Docker container
