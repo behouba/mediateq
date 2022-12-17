@@ -69,15 +69,17 @@ func (h handler) upload(ctx *gin.Context) {
 
 }
 
+// parseRequestBody read request body and
+// create the sha256 hash of the request body to be used as filename
 func parseRequestBody(
-	r io.Reader, maxFileSizeBytes int64, logger *logrus.Logger,
+	request io.Reader, maxFileSizeBytes int64, logger *logrus.Logger,
 ) (buffer []byte, hash string, err error) {
 
-	body := io.LimitReader(r, maxFileSizeBytes)
+	body := io.LimitReader(request, maxFileSizeBytes)
 
 	buffer, err = ioutil.ReadAll(body)
 	if err != nil {
-		logger.Info("Failed to read upload request body: " + err.Error())
+		logger.WithField("error", err.Error()).Error("failed to read upload request body")
 		return
 	}
 
