@@ -4,8 +4,6 @@ mediateq is a file storage REST API micro-service.
 
 ## Installation
 
-### Install libvips
-
 Clone the project
 
 ```bash
