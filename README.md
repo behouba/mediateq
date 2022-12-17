@@ -26,4 +26,12 @@ To build mediateq you can run the build.sh script
 ./bin/mediateq -config=mediateq.yaml
 ```
 
+### API
+
+The file storage microservice provides the following HTTP endpoints:
+
+TODO
+
 ### Docker container
+
+TODO
