@@ -2,31 +2,15 @@
 
 mediateq is a file storage REST API micro-service.
 
-## Dependencies
-
-- libvips 8.3+
-
 ## Installation
 
 ### Install libvips
 
-for mac:
+Clone the project
 
 ```bash
-brew install vips
+git clone https://github.com/behouba/mediateq.git
 ```
-
-for Linux (Ubuntu):
-
-```bash
-sudo apt-get update -y
-```
-
-```bash
-sudo apt-get install -y libvips
-```
-
-For other operating systems check [libvips install](https://libvips.github.io/libvips/install.html) instructions
 
 ### Testing
 

@@ -8,15 +8,12 @@ import (
 
 	"github.com/behouba/mediateq/pkg/config"
 	"github.com/behouba/mediateq/routing"
+	"github.com/behouba/mediateq/storage"
 )
 
 var (
-	configFileFlag = flag.String("config", "mediateq.yaml", "This flag is used to specify the location of the configuration file for the application. The default value for this flag is \"mediateq.yaml\".")
+	configFileFlag = flag.String("config", "mediateq.yaml", "The configuration file for mediateq server.")
 )
-
-func run() {
-
-}
 
 func main() {
 
@@ -29,17 +26,17 @@ func main() {
 		log.Fatal(err)
 	}
 
-	// database, err := database.NewDatabase(cfg.Database, database.TypePostgres)
+	// db, err := database.NewDatabase(cfg.Database)
 	// if err != nil {
 	// 	log.Fatal(err)
 	// }
 
-	// storage, err := localdisk.Newstorage(cfg.Storage)
-	// if err != nil {
-	// 	log.Fatal(err)
-	// }
+	storage, err := storage.New(cfg.Storage)
+	if err != nil {
+		log.Fatal(err)
+	}
 
-	handler, err := routing.NewHandler(cfg, nil, nil)
+	handler, err := routing.NewHandler(cfg, storage, nil)
 	if err != nil {
 		log.Fatal(err)
 	}

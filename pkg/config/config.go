@@ -108,12 +108,12 @@ type ImageSize struct {
 }
 
 type Database struct {
-	Type     string `yaml:"type"`
-	Host     string `yaml:"host"`
-	Port     int    `yaml:"port"`
-	DBName   string `yaml:"db_name"`
-	Username string `yaml:"username"`
-	Password string `yaml:"password"`
+	Type     mediateq.DBType `yaml:"type"`
+	Host     string          `yaml:"host"`
+	Port     int             `yaml:"port"`
+	DBName   string          `yaml:"db_name"`
+	Username string          `yaml:"username"`
+	Password string          `yaml:"password"`
 }
 
 type Storage struct {

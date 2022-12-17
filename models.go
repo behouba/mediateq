@@ -52,6 +52,10 @@ type Media struct {
 
 // Storage is an abstration of place where files are stored
 type Storage interface {
+	// Write method write file buffer to storage and
+	// return the relative path and an error if the write operating fail
 	Write(ctx context.Context, buff []byte, filename string) (path string, err error)
+	// Remove method should remove a file from
+	// the storage given the path to the target file
 	Remove(ctx context.Context, path string) error
 }

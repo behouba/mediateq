@@ -5,7 +5,6 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/sirupsen/logrus"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -15,8 +14,6 @@ func TestValidateUploadRequest(t *testing.T) {
 }
 
 func TestParseRequestBody(t *testing.T) {
-	// Create a test logger
-	logger := logrus.New()
 
 	// Define test cases
 	testCases := []struct {
@@ -47,7 +44,7 @@ func TestParseRequestBody(t *testing.T) {
 		t.Run(tc.name, func(t *testing.T) {
 
 			// Call the function being tested
-			body, hash, err := parseRequestBody(tc.requestBody, tc.maxFileSize, logger)
+			body, hash, err := parseRequestBody(tc.requestBody, tc.maxFileSize)
 
 			// Verify the results
 			assert.Equal(t, nil, err)

@@ -8,12 +8,12 @@ import (
 	"io/ioutil"
 	"log"
 	"net/http"
+	"net/url"
 
 	"github.com/behouba/mediateq"
 	"github.com/behouba/mediateq/pkg/config"
 	"github.com/digitalcore-ci/jsonutil"
 	"github.com/gin-gonic/gin"
-	"github.com/sirupsen/logrus"
 )
 
 // extractAndValidateMedia extract data of the media file to be uploaded
@@ -55,31 +55,43 @@ func (h handler) upload(ctx *gin.Context) {
 		return
 	}
 
-	buffer, hash, err := parseRequestBody(ctx.Request.Body, h.config.MaxFileSizeBytes, h.logger)
+	buffer, hash, err := parseRequestBody(ctx.Request.Body, h.config.MaxFileSizeBytes)
 	if err != nil {
+		h.logger.WithField("error", err.Error()).Error()
 		ctx.JSON(http.StatusInternalServerError, jsonutil.InternalServerError())
 		return
 	}
 
-	h.storage.Write(ctx, buffer, hash)
+	path, err := h.storage.Write(ctx, buffer, hash)
+	if err != nil {
+		h.logger.WithField("error", err.Error()).Error()
+		ctx.JSON(http.StatusInternalServerError, jsonutil.UnknownError("failed to write file to storage"))
+		return
+	}
 
-	// TODO: write to local disk or cloud depending on server configuration
+	media.URL, err = url.JoinPath(h.config.Domain, path)
+	if err != nil {
+		h.logger.WithField("error", err.Error()).Error()
+		ctx.JSON(http.StatusInternalServerError, jsonutil.InternalServerError())
+		return
+	}
+
+	// TODO: save media data to database
 
 	log.Println(media)
+
+	ctx.JSON(http.StatusOK, jsonutil.Response{"media": media})
 
 }
 
 // parseRequestBody read request body and
 // create the sha256 hash of the request body to be used as filename
-func parseRequestBody(
-	request io.Reader, maxFileSizeBytes int64, logger *logrus.Logger,
-) (buffer []byte, hash string, err error) {
+func parseRequestBody(request io.Reader, maxFileSizeBytes int64) (buffer []byte, hash string, err error) {
 
 	body := io.LimitReader(request, maxFileSizeBytes)
 
 	buffer, err = ioutil.ReadAll(body)
 	if err != nil {
-		logger.WithField("error", err.Error()).Error("failed to read upload request body")
 		return
 	}
 
