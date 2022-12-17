@@ -13,7 +13,7 @@ type storage struct {
 	cfg *config.Storage
 }
 
-func Newstorage(cfg *config.Storage) (*storage, error) {
+func New(cfg *config.Storage) (*storage, error) {
 
 	if err := os.MkdirAll(cfg.UploadPath, fs.ModePerm); err != nil {
 		return nil, err
@@ -46,5 +46,5 @@ func (s storage) Write(ctx context.Context, buff []byte, filename string) (fileP
 }
 
 func (s storage) Remove(ctx context.Context, path string) error {
-	return nil
+	return os.Remove(path)
 }

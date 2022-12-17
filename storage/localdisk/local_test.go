@@ -11,20 +11,20 @@ import (
 
 func TestWrite(t *testing.T) {
 
-	cfg := config.Storage{UploadPath: "upload/"}
-	storage, err := Newstorage(&cfg)
+	cfg := config.Storage{UploadPath: "/tmp"}
+	storage, err := New(&cfg)
 	if err != nil {
 		t.Fatal(err)
 	}
 
-	ctx := context.Background()
+	filename := "hello.txt"
 
-	filePath, err := storage.Write(ctx, []byte(`Hello world`), "cat.txt")
+	filePath, err := storage.Write(context.Background(), []byte(`Hello world`), filename)
 	if err != nil {
 		t.Fatal(err)
 	}
 
-	os.RemoveAll("static")
+	defer os.RemoveAll(filePath)
 
 	log.Println(filePath)
 }
