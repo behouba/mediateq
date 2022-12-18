@@ -107,14 +107,14 @@ func parseRequestBody(request io.Reader, maxFileSizeBytes int64) (buffer []byte,
 
 	body := io.LimitReader(request, maxFileSizeBytes)
 
-	buffer, err = io.ReadAll(body)
+	hasher := sha256.New()
+
+	teeReader := io.TeeReader(body, hasher)
+
+	buffer, err = io.ReadAll(teeReader)
 	if err != nil {
 		return
 	}
-
-	hasher := sha256.New()
-
-	io.TeeReader(body, hasher)
 
 	hash = base64.RawURLEncoding.EncodeToString(hasher.Sum(nil)[:])
 

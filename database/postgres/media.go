@@ -40,6 +40,6 @@ func (mediaStmts) Insert(ctx context.Context, media *mediateq.Media) (int, error
 }
 
 // SelectByUID implements schema.MediaTable
-func (mediaStmts) SelectByUID(ctx context.Context, id string) (*mediateq.Media, error) {
+func (mediaStmts) SelectByID(ctx context.Context, id string) (*mediateq.Media, error) {
 	panic("unimplemented")
 }

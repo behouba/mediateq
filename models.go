@@ -58,3 +58,13 @@ type Storage interface {
 	// the storage given the path to the target file
 	Remove(ctx context.Context, path string) error
 }
+
+// Database is interface to represent database operations of mediateq
+type Database interface {
+	// SaveMedia save media object to the database
+	SaveMedia(ctx context.Context, media *Media) (int, error)
+	// GetMedia get media from database by id
+	GetMedia(ctx context.Context, mediaID string) (media *Media, err error)
+	// DeleteMedia delete media from database by id
+	DeleteMedia(ctx context.Context, mediaID string) error
+}

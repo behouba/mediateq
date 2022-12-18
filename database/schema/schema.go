@@ -1,9 +1,24 @@
 package schema
 
 import (
+	"context"
 	"database/sql"
 	"fmt"
+
+	"github.com/behouba/mediateq"
 )
+
+// Database represents mediateq database and group all database operations
+type Database struct {
+	MediaTable MediaTable
+}
+
+// MediaTable is an interface to represent the database operations on media objects
+type MediaTable interface {
+	Insert(ctx context.Context, media *mediateq.Media) (int, error)
+	SelectByID(ctx context.Context, id string) (*mediateq.Media, error)
+	Delete(ctx context.Context, id string) error
+}
 
 // statementList is a list of SQL statements to prepare and a pointer to where to store the resulting prepared statement.
 type StatementList []struct {

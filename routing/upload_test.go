@@ -28,14 +28,14 @@ func TestParseRequestBody(t *testing.T) {
 			requestBody:  strings.NewReader("Hello, World!"),
 			maxFileSize:  5,
 			expectedBody: "Hello",
-			expectedHash: "47DEQpj8HBSa-_TImW-5JCeuQeRkm5NMpJWZG3hSuFU",
+			expectedHash: "GF-NsyJx_iX1Yab8k4suJkMG7DBO2lGAB9F2SCY4GWk",
 		},
 		{
 			name:         "Request body less than allowed maximum",
 			requestBody:  strings.NewReader("Hello, World!"),
 			maxFileSize:  100,
 			expectedBody: "Hello, World!",
-			expectedHash: "47DEQpj8HBSa-_TImW-5JCeuQeRkm5NMpJWZG3hSuFU",
+			expectedHash: "3_1gIbsr1bCvZ2KQgJ7DpTGR3YHH9wpLKGiKNiGCmG8",
 		},
 	}
 
