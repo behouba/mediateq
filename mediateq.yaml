@@ -7,10 +7,10 @@ domain: http://localhost:8080
 database:
   type: postgres
   host: localhost
-  port: 5400
+  port: 5432
   db_name: mediateq
   username: mediateq
-  password: password
+  password: mediateq
 
 max_file_size_bytes: 10000000
 

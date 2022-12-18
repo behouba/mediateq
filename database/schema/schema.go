@@ -15,7 +15,7 @@ type Database struct {
 
 // MediaTable is an interface to represent the database operations on media objects
 type MediaTable interface {
-	Insert(ctx context.Context, media *mediateq.Media) (int, error)
+	Insert(ctx context.Context, media *mediateq.Media) (int64, error)
 	SelectByID(ctx context.Context, id string) (*mediateq.Media, error)
 	Delete(ctx context.Context, id string) error
 }

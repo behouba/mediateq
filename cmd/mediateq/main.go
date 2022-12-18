@@ -6,6 +6,7 @@ import (
 	"log"
 	"net/http"
 
+	"github.com/behouba/mediateq/database"
 	"github.com/behouba/mediateq/pkg/config"
 	"github.com/behouba/mediateq/routing"
 	"github.com/behouba/mediateq/storage"
@@ -26,17 +27,17 @@ func main() {
 		log.Fatal(err)
 	}
 
-	// db, err := database.NewDatabase(cfg.Database)
-	// if err != nil {
-	// 	log.Fatal(err)
-	// }
+	database, err := database.NewDatabase(cfg.Database)
+	if err != nil {
+		log.Fatal(err)
+	}
 
 	storage, err := storage.New(cfg.Storage)
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	handler, err := routing.NewHandler(cfg, storage, nil)
+	handler, err := routing.NewHandler(cfg, storage, database)
 	if err != nil {
 		log.Fatal(err)
 	}

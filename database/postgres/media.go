@@ -9,23 +9,23 @@ import (
 )
 
 const (
-	insertMediaSQL = "INSERT INTO media () VALUES ()"
+	insertMediaSQL = "INSERT INTO media (id, content_type, origin, url, timestamp, size_bytes) VALUES ($1, $2, $3, $4, $5, $6) RETURNING nid;"
 	selectMediaSQL = ""
 	deleteMediaSQL = ""
 )
 
 type mediaStmts struct {
-	insertSQL  *sql.Stmt
+	insertStmt *sql.Stmt
 	selectStmt *sql.Stmt
 	deleteStmt *sql.Stmt
 }
 
 func newMediaTable(db *sql.DB) (schema.MediaTable, error) {
-	s := mediaStmts{}
+	s := &mediaStmts{}
 	return s, schema.StatementList{
-		{&s.insertSQL, insertMediaSQL},
-		{&s.selectStmt, selectMediaSQL},
-		{&s.deleteStmt, deleteMediaSQL},
+		{&s.insertStmt, insertMediaSQL},
+		// {&s.selectStmt, selectMediaSQL},
+		// {&s.deleteStmt, deleteMediaSQL},
 	}.Prepare(db)
 }
 
@@ -35,8 +35,15 @@ func (mediaStmts) Delete(ctx context.Context, id string) error {
 }
 
 // Insert implements schema.MediaTable
-func (mediaStmts) Insert(ctx context.Context, media *mediateq.Media) (int, error) {
-	panic("unimplemented")
+func (s mediaStmts) Insert(ctx context.Context, m *mediateq.Media) (int64, error) {
+	var nid int64
+	err := s.insertStmt.QueryRowContext(
+		ctx, m.ID, m.ContentType, m.Origin, m.URL, m.Timestamp, m.Size,
+	).Scan(&nid)
+	if err != nil {
+		return 0, err
+	}
+	return nid, nil
 }
 
 // SelectByUID implements schema.MediaTable

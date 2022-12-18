@@ -97,6 +97,13 @@ func (h handler) upload(ctx *gin.Context) {
 	// TODO: save media data to database
 	log.Println(media)
 
+	media.NID, err = h.db.MediaTable.Insert(ctx, media)
+	if err != nil {
+		h.logger.WithField("database-error", err.Error()).Error()
+		ctx.JSON(http.StatusInternalServerError, jsonutil.InternalServerError())
+		return
+	}
+
 	ctx.JSON(http.StatusOK, jsonutil.Response{"media": media})
 
 }

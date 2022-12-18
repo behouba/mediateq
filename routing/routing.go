@@ -52,10 +52,16 @@ func NewHandler(cfg *config.Config, storage mediateq.Storage, db *schema.Databas
 
 	{
 		mediateq.GET("/info", h.serverInfo)
-
 		mediateq.POST("/upload", h.upload)
+		mediateq.GET("/thumbnail/:mediaId", h.thumbnail)
 
-		mediateq.GET("/thumbnail", nil)
+		media := mediateq.Group("/media")
+		{
+			media.GET("", nil) // Paginated list of media files from the database
+			media.GET("/:mediaId", nil)
+			media.DELETE("/:mediaId", nil)
+		}
+
 	}
 
 	return router, nil
