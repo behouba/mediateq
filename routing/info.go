@@ -14,12 +14,3 @@ type serverInfo struct {
 	StartTime           time.Time              `json:"startTime"`
 	AllowedContentTypes []mediateq.ContentType `json:"allowedContentTypes"`
 }
-
-// stats provides basic statistiques about the server
-type stats struct {
-	Images    int `json:"images"`
-	Videos    int `json:"vidoes"`
-	Audios    int `json:"audios"`
-	Documents int `json:"documents"`
-	Errors    int `json:"errors"`
-}

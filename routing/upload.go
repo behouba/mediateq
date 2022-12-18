@@ -8,6 +8,7 @@ import (
 	"log"
 	"net/http"
 	"net/url"
+	"time"
 
 	"github.com/behouba/mediateq"
 	"github.com/behouba/mediateq/pkg/config"
@@ -25,6 +26,7 @@ func extractAndValidateMedia(ctx *gin.Context, cfg *config.Config) (*mediateq.Me
 		ContentType: mediateq.ContentType(ctx.ContentType()),
 		Size:        ctx.Request.ContentLength,
 		UploadName:  ctx.Request.FormValue("filename"),
+		Timestamp:   time.Now().Unix(),
 	}
 
 	// Check file size
@@ -59,6 +61,23 @@ func (h handler) upload(ctx *gin.Context) {
 		h.logger.WithField("error", err.Error()).Error()
 		ctx.JSON(http.StatusInternalServerError, jsonutil.InternalServerError())
 		return
+	}
+
+	// Set file base64 hash as id
+	media.ID = hash
+
+	// Check if we can detect actual content type of the file
+	acualContentType := mediateq.ContentType(http.DetectContentType(buffer))
+	if acualContentType != media.ContentType && acualContentType != "application/octet-stream" {
+		media.ContentType = acualContentType
+
+		if !h.config.IsContentTypeAllowed(media.ContentType) {
+			ctx.JSON(http.StatusNotAcceptable, jsonutil.InvalidContentTypeError(
+				fmt.Sprintf("content of type %s is not allowed.", media.ContentType),
+			),
+			)
+			return
+		}
 	}
 
 	path, err := h.storage.Write(ctx, buffer, hash)
