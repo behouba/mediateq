@@ -31,7 +31,7 @@ paths:
       tags:
         - upload
       summary: File upload
-      operationId: uploadFile
+      operationId: upload
       description: Upload a single file to mediateq server
       responses:
         '201':
@@ -46,7 +46,22 @@ paths:
             schema:
               $ref: '#/components/schemas/File'
         description: Inventory item to add
-        
+    
+  /download/{date}/{mediaId}:
+      get:
+        tags:
+          - download
+        summary: File download
+        operationId: download
+        description: Endpoint to download static version of uploaded files
+        responses:
+          "200":
+            description: file exist and is downloaded
+          "404":
+            description: file is not found
+          "500":
+            description: an internal server error occured and image can not be served
+
 components:
   schemas:
     Info:
