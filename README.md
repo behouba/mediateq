@@ -1,36 +1,36 @@
 # mediateq
 
-mediateq is a file storage REST API micro-service.
+mediateq is a file storage REST API microservice that allows users to upload and download files, as well as resize images on the fly.
 
 ## Installation
 
-Clone the project
+To install mediateq, clone the project repository:
 
 ```bash
 git clone https://github.com/behouba/mediateq.git
 ```
 
-### Testing
-
-### build mediateq
-
-To build mediateq you can run the build.sh script
+You can then build mediateq by running the `build.sh` script:
 
 ```bash
 ./build.sh
 ```
 
-### Run mediateq
+To run mediateq, use the following command:
 
 ```bash
 ./bin/mediateq -config=mediateq.yaml
 ```
 
-### API
+You can also run tests for mediateq by using the run_tests.sh script:
 
-The file storage microservice provides the following HTTP endpoints:
+```bash
+./run_tests.sh
+```
 
-TODO
+### API specification
+
+The API specification of mediateq can be found [here](docs/mediateq-0.0.1.yaml)
 
 ### Docker container
 
