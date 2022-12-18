@@ -7,6 +7,7 @@ import (
 	"path"
 
 	"github.com/behouba/mediateq/pkg/config"
+	"github.com/behouba/mediateq/storage/storageutil"
 )
 
 type storage struct {
@@ -15,10 +16,7 @@ type storage struct {
 
 func New(cfg *config.Storage) (*storage, error) {
 
-	if err := os.MkdirAll(cfg.UploadPath, fs.ModePerm); err != nil {
-		return nil, err
-	}
-
+	// Create the file upload directory
 	if err := os.MkdirAll(cfg.UploadPath, fs.ModePerm); err != nil {
 		return nil, err
 	}
@@ -28,7 +26,13 @@ func New(cfg *config.Storage) (*storage, error) {
 
 func (s storage) Write(ctx context.Context, buff []byte, filename string) (filePath string, err error) {
 
-	filePath = path.Join(s.cfg.UploadPath, filename)
+	subPath := storageutil.GetSubPath()
+
+	if err = os.MkdirAll(path.Join(s.cfg.UploadPath, subPath), fs.ModePerm); err != nil {
+		return
+	}
+
+	filePath = path.Join(s.cfg.UploadPath, subPath, filename)
 
 	file, err := os.Create(filePath)
 	if err != nil {
@@ -42,7 +46,7 @@ func (s storage) Write(ctx context.Context, buff []byte, filename string) (fileP
 		return
 	}
 
-	return filePath, nil
+	return path.Join(subPath, filename), nil
 }
 
 func (s storage) Remove(ctx context.Context, path string) error {

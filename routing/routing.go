@@ -14,6 +14,8 @@ import (
 // apiVersion is a string representation of the current mediateq server version
 const apiVersion = "v0"
 
+const downloadPath = "download/"
+
 type handler struct {
 	config  *config.Config
 	storage mediateq.Storage
@@ -27,7 +29,7 @@ func NewHandler(cfg *config.Config, storage mediateq.Storage, db *schema.Databas
 	router := gin.Default()
 
 	// Serve static version of uploaded files
-	router.Static("upload/", cfg.Storage.UploadPath)
+	router.Static(downloadPath, cfg.Storage.UploadPath)
 
 	mediateq := router.Group("/mediateq/" + apiVersion)
 

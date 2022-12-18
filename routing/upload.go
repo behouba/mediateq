@@ -5,7 +5,6 @@ import (
 	"encoding/base64"
 	"fmt"
 	"io"
-	"io/ioutil"
 	"log"
 	"net/http"
 	"net/url"
@@ -35,7 +34,7 @@ func extractAndValidateMedia(ctx *gin.Context, cfg *config.Config) (*mediateq.Me
 		)
 	}
 
-	// Check if content type of the file
+	// Check the content type of the file
 	if !cfg.IsContentTypeAllowed(media.ContentType) {
 		return nil, jsonutil.InvalidContentTypeError(
 			fmt.Sprintf("content of type %s is not allowed.", media.ContentType),
@@ -69,7 +68,7 @@ func (h handler) upload(ctx *gin.Context) {
 		return
 	}
 
-	media.URL, err = url.JoinPath(h.config.Domain, path)
+	media.URL, err = url.JoinPath(h.config.Domain, downloadPath, path)
 	if err != nil {
 		h.logger.WithField("error", err.Error()).Error()
 		ctx.JSON(http.StatusInternalServerError, jsonutil.InternalServerError())
@@ -77,7 +76,6 @@ func (h handler) upload(ctx *gin.Context) {
 	}
 
 	// TODO: save media data to database
-
 	log.Println(media)
 
 	ctx.JSON(http.StatusOK, jsonutil.Response{"media": media})
@@ -90,7 +88,7 @@ func parseRequestBody(request io.Reader, maxFileSizeBytes int64) (buffer []byte,
 
 	body := io.LimitReader(request, maxFileSizeBytes)
 
-	buffer, err = ioutil.ReadAll(body)
+	buffer, err = io.ReadAll(body)
 	if err != nil {
 		return
 	}
