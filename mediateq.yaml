@@ -1,25 +1,40 @@
-version: v0
+version: v0 # version of mediateq
 
-port: 8080
+port: 8080 # port on which to run the server
 
-domain: http://localhost:8080
+# the domain name of the server. 
+# It should be a valid domain name (https://example.com). 
+# For local addresses you must append the port number (http://127.0.0.1:8080)
+domain: http://localhost:8080 
 
+# Configuration data of the database
 database:
-  type: postgres
-  host: localhost
-  port: 5432
+  # The type of database engime [postgres]
+  type: postgres 
+  # Database host address
+  host: localhost 
+  # Database port
+  port: 5432 
+  # Database name
   db_name: mediateq
-  username: mediateq
-  password: mediateq
+  # Database user name 
+  username: mediateq 
+  # Database user password
+  password: mediateq 
 
+# The maximum size of file to accept on the server in bytes
 max_file_size_bytes: 10000000
 
+# The list of content type allowed by the server
 allowed_content_types:
   - image/jpeg
   - image/png
   - image/bimg
   - image/webp
 
+# Configuration data of the file storage
 storage:
+  # The type of storage [localdisk: to save file on your local machine]
   type: localdisk
+  # The relative path to the folder were files should be stored
   upload_path: upload/
