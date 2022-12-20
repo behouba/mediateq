@@ -9,22 +9,22 @@ import (
 )
 
 const (
-	insertMediaSQL = "INSERT INTO media (id, content_type, origin, url, timestamp, size_bytes) VALUES ($1, $2, $3, $4, $5, $6) RETURNING nid;"
-	selectMediaSQL = ""
-	deleteMediaSQL = ""
+	insertMediaSQL     = "INSERT INTO media (id, content_type, origin, url, timestamp, size_bytes) VALUES ($1, $2, $3, $4, $5, $6) RETURNING nid;"
+	selectMediaByIDSQL = "SELECT nid, id, content_type, origin, url, timestamp, size_bytes FROM media WHERE id=$1;"
+	deleteMediaSQL     = ""
 )
 
 type mediaStmts struct {
-	insertStmt *sql.Stmt
-	selectStmt *sql.Stmt
-	deleteStmt *sql.Stmt
+	insertStmt     *sql.Stmt
+	selectByIDStmt *sql.Stmt
+	deleteStmt     *sql.Stmt
 }
 
 func newMediaTable(db *sql.DB) (schema.MediaTable, error) {
 	s := &mediaStmts{}
 	return s, schema.StatementList{
 		{&s.insertStmt, insertMediaSQL},
-		// {&s.selectStmt, selectMediaSQL},
+		{&s.selectByIDStmt, selectMediaByIDSQL},
 		// {&s.deleteStmt, deleteMediaSQL},
 	}.Prepare(db)
 }
@@ -47,6 +47,10 @@ func (s mediaStmts) Insert(ctx context.Context, m *mediateq.Media) (int64, error
 }
 
 // SelectByUID implements schema.MediaTable
-func (mediaStmts) SelectByID(ctx context.Context, id string) (*mediateq.Media, error) {
-	panic("unimplemented")
+func (m mediaStmts) SelectByID(ctx context.Context, id string) (*mediateq.Media, error) {
+	md := mediateq.Media{}
+	err := m.selectByIDStmt.QueryRowContext(ctx, id).Scan(
+		&md.NID, &md.ID, &md.ContentType, &md.Origin, &md.URL, &md.Timestamp, &md.Size,
+	)
+	return &md, err
 }

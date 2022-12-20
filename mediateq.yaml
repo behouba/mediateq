@@ -4,7 +4,7 @@ port: 8080 # port on which to run the server
 
 # the domain name of the server. 
 # It should be a valid domain name (https://example.com). 
-# For local addresses you must append the port number (http://127.0.0.1:8080)
+# For local addresses you must append the port number when not using port 80 (http://127.0.0.1:8080)
 domain: http://localhost:8080 
 
 # Configuration data of the database

@@ -5,7 +5,6 @@ import (
 	"encoding/base64"
 	"fmt"
 	"io"
-	"log"
 	"net/http"
 	"net/url"
 	"time"
@@ -94,9 +93,7 @@ func (h handler) upload(ctx *gin.Context) {
 		return
 	}
 
-	// TODO: save media data to database
-	log.Println(media)
-
+	// TODO: handle case of duplicate upload
 	media.NID, err = h.db.MediaTable.Insert(ctx, media)
 	if err != nil {
 		h.logger.WithField("database-error", err.Error()).Error()
