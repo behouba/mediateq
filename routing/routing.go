@@ -57,9 +57,9 @@ func NewHandler(cfg *config.Config, storage mediateq.Storage, db *schema.Databas
 
 		media := mediateq.Group("/media")
 		{
-			media.GET("", nil) // Paginated list of media files from the database
+			media.GET("", h.getMediaList)
 			media.GET("/:mediaId", h.getMediaByID)
-			media.DELETE("/:mediaId", nil)
+			media.DELETE("/:mediaId", h.deleteMedia)
 		}
 
 	}

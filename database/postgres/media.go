@@ -34,6 +34,11 @@ func (mediaStmts) Delete(ctx context.Context, id string) error {
 	panic("unimplemented")
 }
 
+// SelectList implements schema.MediaTable
+func (*mediaStmts) SelectList(ctx context.Context, offset int64, limit int64) ([]mediateq.Media, error) {
+	panic("unimplemented")
+}
+
 // Insert implements schema.MediaTable
 func (s mediaStmts) Insert(ctx context.Context, m *mediateq.Media) (int64, error) {
 	var nid int64
