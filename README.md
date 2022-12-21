@@ -2,7 +2,7 @@
 
 mediateq is a file storage REST API microservice that allows users to upload and download files, as well as resize images on the fly.
 
-![CI](https://raw.githubusercontent.com/behouba/mediateq/master/.github/static/badge.svg)
+![CI](https://raw.githubusercontent.com/behouba/mediateq/main/.github/main.yml/badge.svg)
 
 ## Installation
 
