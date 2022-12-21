@@ -2,6 +2,8 @@ name: CI
 
 on: [push, pull_request]
 
+
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -23,3 +25,8 @@ jobs:
         run: go test -coverprofile=coverage.out -v ./...
         env:
           GO111MODULE: "on"
+      - uses: peter-evans/action-badge@v1
+        with:
+          color: green
+          icon: github
+          label: CI
