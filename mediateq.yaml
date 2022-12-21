@@ -38,3 +38,6 @@ storage:
   type: localdisk
   # The relative path to the folder were files should be stored
   upload_path: upload/
+  # Use this variable to specify if the server should allow 
+  # request to delete files 
+  delete_allowed: false
