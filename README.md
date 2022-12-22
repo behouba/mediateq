@@ -25,6 +25,10 @@ curl -s https://raw.githubusercontent.com/h2non/bimg/master/preinstall.sh | sudo
 
 The install script requires curl and pkg-config
 
+If the above script is not working, please follow libvips installation instructions:
+
+https://libvips.github.io/libvips/install.html
+
 You can then build mediateq by running the `build.sh` script:
 
 ```bash
