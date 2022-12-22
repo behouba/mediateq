@@ -1,16 +1,14 @@
 package routing
 
 import (
-	"crypto/sha256"
-	"encoding/base64"
 	"fmt"
-	"io"
 	"net/http"
 	"net/url"
 	"time"
 
 	"github.com/behouba/mediateq"
 	"github.com/behouba/mediateq/pkg/config"
+	"github.com/behouba/mediateq/pkg/fileutil"
 	"github.com/digitalcore-ci/jsonutil"
 	"github.com/gin-gonic/gin"
 )
@@ -55,11 +53,25 @@ func (h handler) upload(ctx *gin.Context) {
 		return
 	}
 
-	buffer, hash, err := parseRequestBody(ctx.Request.Body, h.config.MaxFileSizeBytes)
+	buffer, hash, err := fileutil.ParseRequestBody(ctx.Request.Body, h.config.MaxFileSizeBytes)
 	if err != nil {
 		h.logger.WithField("error", err.Error()).Error()
 		ctx.JSON(http.StatusInternalServerError, jsonutil.InternalServerError())
 		return
+	}
+
+	// // Resize if media is an image and here is a defaut image size width
+	if media.IsImage() && (h.config.Storage.DefaultImageSize.Width != 0) {
+		buffer, hash, media.Size, err = fileutil.ResizeImage(
+			buffer,
+			h.config.Storage.DefaultImageSize.Width,
+			h.config.Storage.DefaultImageSize.Height,
+		)
+		if err != nil {
+			h.logger.WithField("error", err.Error()).Error()
+			ctx.JSON(http.StatusInternalServerError, jsonutil.InternalServerError())
+			return
+		}
 	}
 
 	// Set file base64 hash as id
@@ -103,24 +115,4 @@ func (h handler) upload(ctx *gin.Context) {
 
 	ctx.JSON(http.StatusOK, jsonutil.Response{"media": media})
 
-}
-
-// parseRequestBody read request body and
-// create the sha256 hash of the request body to be used as filename
-func parseRequestBody(request io.Reader, maxFileSizeBytes int64) (buffer []byte, hash string, err error) {
-
-	body := io.LimitReader(request, maxFileSizeBytes)
-
-	hasher := sha256.New()
-
-	teeReader := io.TeeReader(body, hasher)
-
-	buffer, err = io.ReadAll(teeReader)
-	if err != nil {
-		return
-	}
-
-	hash = base64.RawURLEncoding.EncodeToString(hasher.Sum(nil)[:])
-
-	return
 }
