@@ -117,9 +117,10 @@ type Database struct {
 }
 
 type Storage struct {
-	Type          mediateq.StorageType `yaml:"type"`        // The type of storage used by the to read and write files
-	UploadPath    string               `yaml:"upload_path"` // Path to the folder were files should be uploaded
-	DeleteAllowed bool                 `yaml:"delete_allowed"`
+	Type             mediateq.StorageType `yaml:"type"`        // The type of storage used by the to read and write files
+	UploadPath       string               `yaml:"upload_path"` // Path to the folder were files should be uploaded
+	DeleteAllowed    bool                 `yaml:"delete_allowed"`
+	DefaultImageSize ImageSize            `yaml:"default_image_size"`
 }
 
 // Load loads mediateq configuration from yaml file

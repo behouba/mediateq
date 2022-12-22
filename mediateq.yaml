@@ -25,12 +25,16 @@ database:
 # The maximum size of file to accept on the server in bytes
 max_file_size_bytes: 10000000
 
+
+
 # The list of content type allowed by the server
 allowed_content_types:
   - image/jpeg
   - image/png
   - image/bimg
   - image/webp
+
+
 
 # Configuration data of the file storage
 storage:
@@ -41,3 +45,13 @@ storage:
   # Use this variable to specify if the server should allow 
   # request to delete files 
   delete_allowed: false
+  # Configure the default size for uploaded images 
+  # to prioritize file size while preserving a sufficient 
+  # level of quality. If the width and height are set to 0, 
+  # the files will not be resized upon upload. 
+  # To maintain the aspect ratio of the image, only set the width and leave the height as 0.
+  default_image_size:
+    # default image width in pixels
+    width: 1200
+    # default imamge height in pixels
+    height: 0
