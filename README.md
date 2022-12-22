@@ -20,7 +20,7 @@ You can then build mediateq by running the `build.sh` script:
 
 You will also need to setup a database. Currently mediateq only support postgreSQL.
 
-To setup a postgreSQL database read the instructions [here](database/postgres/README.md)
+Read the instructions to setup a postgreSQL database [here](database/postgres/README.md)
 
 To run mediateq, use the following command:
 

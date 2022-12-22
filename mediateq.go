@@ -2,6 +2,7 @@ package mediateq
 
 import (
 	"context"
+	"strings"
 )
 
 // ContentType represents HTTP MIME types sent in Content-type header
@@ -47,6 +48,14 @@ type Media struct {
 	Size        int64       `json:"size"`        // Size of the file in bytes
 	Timestamp   int64       `json:"tmestamp"`    // Media creation timestamp
 	UploadName  string      `json:"uploadName"`  // Media file upload name
+}
+
+func (m Media) IsImage() bool {
+	cts := strings.Split(string(m.ContentType), "/")
+	if len(cts) == 0 {
+		return false
+	}
+	return cts[0] == "image"
 }
 
 // Storage is an abstration of place where files are stored

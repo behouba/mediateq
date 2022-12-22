@@ -72,3 +72,5 @@ func NewHandler(cfg *config.Config, storage mediateq.Storage, db *schema.Databas
 func (h handler) serverInfo(ctx *gin.Context) {
 	ctx.JSON(http.StatusOK, h.info)
 }
+
+func AddRoutes() {}
