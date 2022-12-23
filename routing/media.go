@@ -21,7 +21,7 @@ func (h handler) getMediaList(ctx *gin.Context) {
 func (h handler) getMediaByID(ctx *gin.Context) {
 	mediaID := ctx.Param("mediaId")
 
-	media, err := h.db.MediaTable.SelectByID(ctx, mediaID)
+	media, err := h.db.MediaTable.SelectByHash(ctx, mediaID)
 	if err != nil {
 		// Check if the error is just about non existing media id
 		if err == sql.ErrNoRows {

@@ -2,12 +2,13 @@ package localdisk
 
 import (
 	"context"
+	"fmt"
 	"io/fs"
 	"os"
 	"path"
+	"time"
 
 	"github.com/behouba/mediateq/pkg/config"
-	"github.com/behouba/mediateq/pkg/fileutil"
 )
 
 type storage struct {
@@ -24,9 +25,16 @@ func New(cfg *config.Storage) (*storage, error) {
 	return &storage{cfg}, nil
 }
 
+// getSubPath return a formatted representation of the current date
+// intended to be used as upload subfolders names
+func getSubPath() string {
+	t := time.Now()
+	return fmt.Sprintf("%d-%02d", t.Year(), t.Month())
+}
+
 func (s storage) Write(ctx context.Context, buff []byte, filename string) (filePath string, err error) {
 
-	subPath := fileutil.GetSubPath()
+	subPath := getSubPath()
 
 	if err = os.MkdirAll(path.Join(s.cfg.UploadPath, subPath), fs.ModePerm); err != nil {
 		return

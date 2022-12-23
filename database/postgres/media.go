@@ -9,9 +9,9 @@ import (
 )
 
 const (
-	insertMediaSQL     = "INSERT INTO media (id, content_type, origin, url, timestamp, size_bytes) VALUES ($1, $2, $3, $4, $5, $6) RETURNING nid;"
-	selectMediaByIDSQL = "SELECT nid, id, content_type, origin, url, timestamp, size_bytes FROM media WHERE id=$1;"
-	deleteMediaSQL     = ""
+	insertMediaSQL       = "INSERT INTO media (hash, content_type, origin, url, timestamp, size) VALUES ($1, $2, $3, $4, $5, $6) RETURNING id;"
+	selectMediaByHashSQL = "SELECT id, hash, content_type, origin, url, timestamp, size FROM media WHERE hash=$1;"
+	deleteMediaSQL       = ""
 )
 
 type mediaStmts struct {
@@ -24,7 +24,7 @@ func newMediaTable(db *sql.DB) (schema.MediaTable, error) {
 	s := &mediaStmts{}
 	return s, schema.StatementList{
 		{&s.insertStmt, insertMediaSQL},
-		{&s.selectByIDStmt, selectMediaByIDSQL},
+		{&s.selectByIDStmt, selectMediaByHashSQL},
 		// {&s.deleteStmt, deleteMediaSQL},
 	}.Prepare(db)
 }
@@ -43,7 +43,7 @@ func (*mediaStmts) SelectList(ctx context.Context, offset int64, limit int64) ([
 func (s mediaStmts) Insert(ctx context.Context, m *mediateq.Media) (int64, error) {
 	var nid int64
 	err := s.insertStmt.QueryRowContext(
-		ctx, m.ID, m.ContentType, m.Origin, m.URL, m.Timestamp, m.Size,
+		ctx, m.Hash, m.ContentType, m.Origin, m.URL, m.Timestamp, m.Size,
 	).Scan(&nid)
 	if err != nil {
 		return 0, err
@@ -52,10 +52,10 @@ func (s mediaStmts) Insert(ctx context.Context, m *mediateq.Media) (int64, error
 }
 
 // SelectByUID implements schema.MediaTable
-func (m mediaStmts) SelectByID(ctx context.Context, id string) (*mediateq.Media, error) {
+func (m mediaStmts) SelectByHash(ctx context.Context, hash string) (*mediateq.Media, error) {
 	md := mediateq.Media{}
-	err := m.selectByIDStmt.QueryRowContext(ctx, id).Scan(
-		&md.NID, &md.ID, &md.ContentType, &md.Origin, &md.URL, &md.Timestamp, &md.Size,
+	err := m.selectByIDStmt.QueryRowContext(ctx, hash).Scan(
+		&md.ID, &md.Hash, &md.ContentType, &md.Origin, &md.URL, &md.Timestamp, &md.Size,
 	)
 	return &md, err
 }

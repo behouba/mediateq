@@ -53,7 +53,7 @@ func NewHandler(cfg *config.Config, storage mediateq.Storage, db *schema.Databas
 	{
 		mediateq.GET("/info", h.serverInfo)
 		mediateq.POST("/upload", h.upload)
-		mediateq.GET("/thumbnail/:mediaId", h.thumbnail)
+		mediateq.GET("/download/:mediaId", h.download)
 
 		media := mediateq.Group("/media")
 		{

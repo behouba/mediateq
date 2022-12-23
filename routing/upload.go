@@ -75,7 +75,7 @@ func (h handler) upload(ctx *gin.Context) {
 	}
 
 	// Set file base64 hash as id
-	media.ID = hash
+	media.Hash = hash
 
 	// Check if we can detect actual content type of the file
 	acualContentType := mediateq.ContentType(http.DetectContentType(buffer))
@@ -106,7 +106,7 @@ func (h handler) upload(ctx *gin.Context) {
 	}
 
 	// TODO: handle case of duplicate upload
-	media.NID, err = h.db.MediaTable.Insert(ctx, media)
+	media.ID, err = h.db.MediaTable.Insert(ctx, media)
 	if err != nil {
 		h.logger.WithField("database-error", err.Error()).Error()
 		ctx.JSON(http.StatusInternalServerError, jsonutil.InternalServerError())

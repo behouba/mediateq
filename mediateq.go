@@ -40,8 +40,8 @@ type ImageProcessor interface {
 
 // Media is a representation of mediateq file.
 type Media struct {
-	NID         int64       `json:"nid"`         // Numeric id (db primary key)
-	ID          string      `json:"id"`          // Base64 hash of the file used as a unique string identifier
+	ID          int64       `json:"nid"`         // Numeric id (db primary key)
+	Hash        string      `json:"hash"`        // Base64 hash of the file used as a unique string identifier
 	URL         string      `json:"url"`         // url to access the file over internet
 	Origin      string      `json:"origin"`      // Origin domain of the file
 	ContentType ContentType `json:"contentType"` //

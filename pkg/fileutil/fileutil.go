@@ -3,19 +3,10 @@ package fileutil
 import (
 	"crypto/sha256"
 	"encoding/base64"
-	"fmt"
 	"io"
-	"time"
 
 	"github.com/h2non/bimg"
 )
-
-// GetSubPath return a formatted representation of the current date
-// intended to be used as upload subfolders names
-func GetSubPath() string {
-	t := time.Now()
-	return fmt.Sprintf("%d-%02d", t.Year(), t.Month())
-}
 
 // ParseRequestBody read request body and
 // create the sha256 hash of the request body to be used as filename
