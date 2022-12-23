@@ -43,6 +43,7 @@ type Media struct {
 	ID          int64       `json:"nid"`         // Numeric id (db primary key)
 	Hash        string      `json:"hash"`        // Base64 hash of the file used as a unique string identifier
 	URL         string      `json:"url"`         // url to access the file over internet
+	FullPath    string      `json:"fullPath"`    // relative path to the file from main upload path
 	Origin      string      `json:"origin"`      // Origin domain of the file
 	ContentType ContentType `json:"contentType"` //
 	Size        int64       `json:"size"`        // Size of the file in bytes

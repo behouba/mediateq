@@ -31,5 +31,5 @@ GRANT ALL PRIVILEGES ON [DATABASE_NAME] mydatabase TO [DATABASE_USER];
 ### 5. Create database tables
 
 ```bash
-psql -U mediateq -d mediateq -f /path/to/mediateq/database/postgres/schema.sql
+psql -U [DATABASE_USER] -d [DATABASE_NAME] -f /path/to/mediateq/database/postgres/schema.sql
 ```

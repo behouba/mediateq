@@ -5,8 +5,10 @@ import (
 	"net/http"
 	"os"
 	"path/filepath"
+	"strconv"
 	"time"
 
+	"github.com/behouba/mediateq/pkg/fileutil"
 	"github.com/digitalcore-ci/jsonutil"
 	"github.com/gin-gonic/gin"
 )
@@ -16,21 +18,28 @@ import (
 // This function also generate image file's thumbnail based on the mediaId  and
 // the queries parameters: width and height.
 func (h handler) download(ctx *gin.Context) {
-	// mediaId := ctx.Param("mediaId")
+	mediaId := ctx.Param("mediaId")
 
-	// _, err := h.db.MediaTable.SelectByHash(ctx, mediaId)
-	// if err != nil {
-	// 	h.logger.WithField("error", err.Error())
-	// 	ctx.JSON(http.StatusInternalServerError, jsonutil.NotFoundError(err.Error()))
-	// 	return
-	// }
+	width, err := strconv.Atoi(ctx.Query("width"))
+	if err != nil {
+		ctx.JSON(http.StatusBadRequest, nil)
+		return
+	}
+
+	media, err := h.db.MediaTable.SelectByHash(ctx, mediaId)
+	if err != nil {
+		h.logger.WithField("error", err.Error())
+		ctx.JSON(http.StatusInternalServerError, jsonutil.NotFoundError(err.Error()))
+		return
+	}
 
 	file, err := os.Open(
 		filepath.Join(
 			h.config.Storage.UploadPath,
-			"2022-12/4siOxL16rCSeWvEeGxBAtqMmF04HffW_qg8zWuOh2MY",
+			media.FullPath,
 		),
 	)
+
 	if err != nil {
 		h.logger.WithField("error", err.Error())
 		ctx.JSON(http.StatusOK, jsonutil.InternalServerError())
@@ -41,6 +50,14 @@ func (h handler) download(ctx *gin.Context) {
 	if err != nil {
 		ctx.JSON(http.StatusOK, jsonutil.InternalServerError())
 		return
+	}
+
+	if media.IsImage() {
+		fileBuffer, _, _, err = fileutil.ResizeImage(fileBuffer, width, 0)
+		if err != nil {
+			ctx.JSON(http.StatusOK, jsonutil.InternalServerError())
+			return
+		}
 	}
 
 	// Set the Cache-Control and Expires headers

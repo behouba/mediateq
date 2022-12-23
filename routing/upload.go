@@ -91,14 +91,15 @@ func (h handler) upload(ctx *gin.Context) {
 		}
 	}
 
-	path, err := h.storage.Write(ctx, buffer, hash)
+	media.FullPath, err = h.storage.Write(ctx, buffer, hash)
 	if err != nil {
 		h.logger.WithField("error", err.Error()).Error()
 		ctx.JSON(http.StatusInternalServerError, jsonutil.UnknownError("failed to write file to storage"))
 		return
 	}
 
-	media.URL, err = url.JoinPath(h.config.Domain, downloadPath, path)
+	// Create URL to access to file from internet
+	media.URL, err = url.JoinPath(h.config.Domain, downloadPath, media.FullPath)
 	if err != nil {
 		h.logger.WithField("error", err.Error()).Error()
 		ctx.JSON(http.StatusInternalServerError, jsonutil.InternalServerError())
