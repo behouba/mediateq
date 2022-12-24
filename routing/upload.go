@@ -34,7 +34,7 @@ func extractAndValidateMedia(ctx *gin.Context, cfg *config.Config) (*mediateq.Me
 	}
 
 	// Check the content type of the file
-	if !cfg.IsContentTypeAllowed(media.ContentType) && media.ContentType != "multipart/form-data" {
+	if !cfg.IsContentTypeAllowed(media.ContentType) && media.ContentType != mediateq.ContentTypeFormData {
 		return nil, jsonutil.InvalidContentTypeError(
 			fmt.Sprintf("content of type %s is not allowed.", media.ContentType),
 		)
@@ -65,14 +65,14 @@ func (h handler) upload(ctx *gin.Context) {
 	if len(buffer) == 0 {
 		fileHeader, err := ctx.FormFile("file")
 		if err != nil {
-			h.logger.WithField("error", err.Error()).Error()
+			h.logger.WithField("error", err.Error()).Error("failed to get form file")
 			ctx.JSON(http.StatusInternalServerError, jsonutil.InternalServerError())
 			return
 		}
 
 		file, err := fileHeader.Open()
 		if err != nil {
-			h.logger.WithField("error", err.Error()).Error()
+			h.logger.WithField("error", err.Error()).Error("failed to open form file")
 			ctx.JSON(http.StatusInternalServerError, jsonutil.InternalServerError())
 			return
 		}
@@ -81,14 +81,14 @@ func (h handler) upload(ctx *gin.Context) {
 
 		buffer, base64Hash, err = fileutil.ReadFile(file, h.config.MaxFileSizeBytes)
 		if err != nil {
-			h.logger.WithField("error", err.Error()).Error()
+			h.logger.WithField("error", err.Error()).Error("failed to read form file")
 			ctx.JSON(http.StatusInternalServerError, jsonutil.InternalServerError())
 			return
 		}
 	}
 
 	// // Resize image if the file is an image and a defaut image size width is greather than 0
-	if media.IsImage() && (h.config.Storage.DefaultImageSize.Width != 0) {
+	if media.IsImage() && (h.config.Storage.DefaultImageSize.Width > 0) {
 		buffer, base64Hash, media.Size, err = fileutil.ResizeImage(
 			buffer,
 			h.config.Storage.DefaultImageSize.Width,
@@ -101,7 +101,7 @@ func (h handler) upload(ctx *gin.Context) {
 		}
 	}
 
-	// Set file base64 hash as id
+	// Set file base64 hash
 	media.Base64Hash = base64Hash
 
 	// Check if we can detect actual content type of the file

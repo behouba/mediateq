@@ -28,9 +28,6 @@ func NewHandler(cfg *config.Config, storage mediateq.Storage, db *schema.Databas
 
 	router := gin.Default()
 
-	// Serve static version of uploaded files
-	// router.Static(downloadPath, cfg.Storage.UploadPath)
-
 	mediateq := router.Group(apiBasePath)
 
 	// initialization of logrus for logging

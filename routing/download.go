@@ -5,7 +5,6 @@ import (
 	"net/http"
 	"os"
 	"path/filepath"
-	"strconv"
 	"time"
 
 	"github.com/behouba/mediateq/pkg/fileutil"
@@ -42,7 +41,7 @@ func (h handler) download(ctx *gin.Context) {
 	}
 
 	// Check if the file is an image and if an image resize is needed
-	width, _ := strconv.Atoi(ctx.Query("width"))
+	width := queryParamToInt(ctx, "width")
 
 	if media.IsImage() && width > 0 {
 		fileBuffer, _, _, err = fileutil.ResizeImage(fileBuffer, width, 0)

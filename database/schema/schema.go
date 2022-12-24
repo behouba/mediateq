@@ -18,7 +18,7 @@ type MediaTable interface {
 	Insert(ctx context.Context, media *mediateq.Media) (int64, error)
 	SelectByHash(ctx context.Context, id string) (*mediateq.Media, error)
 	// Get paginated list of medias
-	SelectList(ctx context.Context, offset, limit int64) ([]mediateq.Media, error)
+	SelectList(ctx context.Context, offset, limit int) ([]mediateq.Media, error)
 	Delete(ctx context.Context, id string) error
 }
 

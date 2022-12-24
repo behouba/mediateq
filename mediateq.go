@@ -15,6 +15,8 @@ type StorageType string
 type DBType string
 
 const (
+	ContentTypeFormData ContentType = "multipart/form-data"
+
 	// Supported content types for images
 	ContentTypeJPEG ContentType = "image/jpeg"
 	ContentTypePNG  ContentType = "image/png"

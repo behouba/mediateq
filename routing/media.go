@@ -4,16 +4,31 @@ import (
 	"database/sql"
 	"fmt"
 	"net/http"
+	"strconv"
 
-	"github.com/behouba/mediateq"
 	"github.com/digitalcore-ci/jsonutil"
 	"github.com/gin-gonic/gin"
 )
 
+// queryParamToInt extract and convert query parameter to integer
+func queryParamToInt(ctx *gin.Context, query string) int {
+	qInt, _ := strconv.Atoi(ctx.Query(query))
+	return qInt
+}
+
 // getMediaList handle GET /media requests
 // It return a JSON array of media based on offset and limit query parameters
 func (h handler) getMediaList(ctx *gin.Context) {
-	ctx.JSON(http.StatusOK, jsonutil.Response{"mediaList": []mediateq.Media{}})
+	offset, limit := queryParamToInt(ctx, "offset"), queryParamToInt(ctx, "limit")
+
+	mediaList, err := h.db.MediaTable.SelectList(ctx, offset, limit)
+	if err != nil {
+		h.logger.WithField("error", err.Error()).Error("failed to select media list")
+		ctx.JSON(http.StatusInternalServerError, jsonutil.InternalServerError())
+		return
+	}
+
+	ctx.JSON(http.StatusOK, jsonutil.Response{"mediaList": mediaList})
 }
 
 // getMediaByID handle GET /media/{mediaId}
