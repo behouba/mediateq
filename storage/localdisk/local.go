@@ -26,10 +26,10 @@ func New(cfg *config.Storage) (*storage, error) {
 }
 
 // getSubPath return a formatted representation of the current date
-// intended to be used as upload subfolders names
+// intended to be used as upload subfolders names in the format {year}/{month}
 func getSubPath() string {
 	t := time.Now()
-	return fmt.Sprintf("%d-%02d", t.Year(), t.Month())
+	return fmt.Sprintf("%d/%02d", t.Year(), t.Month())
 }
 
 func (s storage) Write(ctx context.Context, buff []byte, filename string) (filePath string, err error) {
@@ -54,7 +54,7 @@ func (s storage) Write(ctx context.Context, buff []byte, filename string) (fileP
 		return
 	}
 
-	return path.Join(subPath, filename), nil
+	return filePath, nil
 }
 
 func (s storage) Remove(ctx context.Context, path string) error {

@@ -9,8 +9,15 @@ import (
 )
 
 const (
-	insertMediaSQL       = "INSERT INTO media (hash, full_path, content_type, origin, url, timestamp, size) VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING id;"
-	selectMediaByHashSQL = "SELECT id, hash, full_path, content_type, origin, url, timestamp, size FROM media WHERE hash=$1;"
+	insertMediaSQL = `
+	INSERT INTO 
+		media (hash, file_path, content_type, origin, url, timestamp, size) 
+	VALUES 
+		($1, $2, $3, $4, $5, $6, $7) 
+	ON CONFLICT DO NOTHING
+	RETURNING id;
+	`
+	selectMediaByHashSQL = "SELECT id, hash, file_path, content_type, origin, url, timestamp, size FROM media WHERE hash=$1;"
 	deleteMediaSQL       = ""
 )
 
@@ -41,21 +48,21 @@ func (*mediaStmts) SelectList(ctx context.Context, offset int64, limit int64) ([
 
 // Insert implements schema.MediaTable
 func (s mediaStmts) Insert(ctx context.Context, m *mediateq.Media) (int64, error) {
-	var nid int64
+	var id int64
 	err := s.insertStmt.QueryRowContext(
-		ctx, m.Hash, m.FullPath, m.ContentType, m.Origin, m.URL, m.Timestamp, m.Size,
-	).Scan(&nid)
+		ctx, m.Hash, m.FilePath, m.ContentType, m.Origin, m.URL, m.Timestamp, m.Size,
+	).Scan(&id)
 	if err != nil {
 		return 0, err
 	}
-	return nid, nil
+	return id, nil
 }
 
 // SelectByUID implements schema.MediaTable
 func (m mediaStmts) SelectByHash(ctx context.Context, hash string) (*mediateq.Media, error) {
 	md := mediateq.Media{}
 	err := m.selectByIDStmt.QueryRowContext(ctx, hash).Scan(
-		&md.ID, &md.Hash, &md.FullPath, &md.ContentType, &md.Origin, &md.URL, &md.Timestamp, &md.Size,
+		&md.ID, &md.Hash, &md.FilePath, &md.ContentType, &md.Origin, &md.URL, &md.Timestamp, &md.Size,
 	)
 	return &md, err
 }

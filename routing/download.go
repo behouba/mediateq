@@ -20,12 +20,6 @@ import (
 func (h handler) download(ctx *gin.Context) {
 	mediaId := ctx.Param("mediaId")
 
-	width, err := strconv.Atoi(ctx.Query("width"))
-	if err != nil {
-		ctx.JSON(http.StatusBadRequest, nil)
-		return
-	}
-
 	media, err := h.db.MediaTable.SelectByHash(ctx, mediaId)
 	if err != nil {
 		h.logger.WithField("error", err.Error())
@@ -33,34 +27,34 @@ func (h handler) download(ctx *gin.Context) {
 		return
 	}
 
-	file, err := os.Open(
-		filepath.Join(
-			h.config.Storage.UploadPath,
-			media.FullPath,
-		),
-	)
-
+	file, err := os.Open(filepath.Join(media.FilePath))
 	if err != nil {
 		h.logger.WithField("error", err.Error())
-		ctx.JSON(http.StatusOK, jsonutil.InternalServerError())
+		ctx.JSON(http.StatusInternalServerError, jsonutil.NotFoundError(err.Error()))
 		return
 	}
 
 	fileBuffer, err := io.ReadAll(file)
 	if err != nil {
-		ctx.JSON(http.StatusOK, jsonutil.InternalServerError())
+		h.logger.WithField("error", err.Error())
+		ctx.JSON(http.StatusInternalServerError, jsonutil.NotFoundError(err.Error()))
 		return
 	}
 
-	if media.IsImage() {
+	// Check if the file is an image and if an image resize is needed
+	width, _ := strconv.Atoi(ctx.Query("width"))
+
+	if media.IsImage() && width > 0 {
 		fileBuffer, _, _, err = fileutil.ResizeImage(fileBuffer, width, 0)
 		if err != nil {
-			ctx.JSON(http.StatusOK, jsonutil.InternalServerError())
+			h.logger.WithField("error", err.Error())
+			ctx.JSON(http.StatusInternalServerError, jsonutil.NotFoundError(err.Error()))
 			return
 		}
 	}
 
 	// Set the Cache-Control and Expires headers
+	ctx.Header("Content-type", string(media.ContentType))
 	ctx.Header("Cache-Control", "max-age=86400")
 	ctx.Header("Expires", time.Now().Add(time.Hour*24).Format(time.RFC1123))
 

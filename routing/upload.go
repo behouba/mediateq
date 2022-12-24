@@ -1,6 +1,7 @@
 package routing
 
 import (
+	"database/sql"
 	"fmt"
 	"net/http"
 	"net/url"
@@ -91,15 +92,15 @@ func (h handler) upload(ctx *gin.Context) {
 		}
 	}
 
-	media.FullPath, err = h.storage.Write(ctx, buffer, hash)
+	media.FilePath, err = h.storage.Write(ctx, buffer, hash)
 	if err != nil {
 		h.logger.WithField("error", err.Error()).Error()
 		ctx.JSON(http.StatusInternalServerError, jsonutil.UnknownError("failed to write file to storage"))
 		return
 	}
 
-	// Create URL to access to file from internet
-	media.URL, err = url.JoinPath(h.config.Domain, downloadPath, media.FullPath)
+	// Create the file URL
+	media.URL, err = url.JoinPath(h.config.Domain, apiBasePath, "download", media.Hash)
 	if err != nil {
 		h.logger.WithField("error", err.Error()).Error()
 		ctx.JSON(http.StatusInternalServerError, jsonutil.InternalServerError())
@@ -108,7 +109,7 @@ func (h handler) upload(ctx *gin.Context) {
 
 	// TODO: handle case of duplicate upload
 	media.ID, err = h.db.MediaTable.Insert(ctx, media)
-	if err != nil {
+	if err != sql.ErrNoRows && err != nil {
 		h.logger.WithField("database-error", err.Error()).Error()
 		ctx.JSON(http.StatusInternalServerError, jsonutil.InternalServerError())
 		return
