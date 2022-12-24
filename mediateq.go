@@ -40,15 +40,15 @@ type ImageProcessor interface {
 
 // Media is a representation of mediateq file.
 type Media struct {
-	ID          int64       `json:"id"`          // Numeric id (db primary key)
-	Hash        string      `json:"hash"`        // Base64 hash of the file used as a unique string identifier
-	URL         string      `json:"url"`         // url to access the file over internet
-	FilePath    string      `json:"filePath"`    // relative path to the file from main upload path
-	Origin      string      `json:"origin"`      // Origin domain of the file
-	ContentType ContentType `json:"contentType"` //
-	Size        int64       `json:"size"`        // Size of the file in bytes
-	Timestamp   int64       `json:"tmestamp"`    // Media creation timestamp
-	UploadName  string      `json:"uploadName"`  // Media file upload name
+	ID          int64       `json:"id"`                   // Numeric id (db primary key)
+	Base64Hash  string      `json:"base64Hash"`           // Base64 hash of the file used as a unique string identifier
+	URL         string      `json:"url"`                  // url to access the file over internet
+	FilePath    string      `json:"filePath"`             // relative path to the file from main upload path
+	Origin      string      `json:"origin"`               // Origin domain of the file
+	ContentType ContentType `json:"contentType"`          //
+	Size        int64       `json:"size"`                 // Size of the file in bytes
+	Timestamp   int64       `json:"tmestamp"`             // Media creation timestamp
+	UploadName  string      `json:"uploadName,omitempty"` // Media file upload name
 }
 
 func (m Media) IsImage() bool {

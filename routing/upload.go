@@ -1,7 +1,6 @@
 package routing
 
 import (
-	"database/sql"
 	"fmt"
 	"net/http"
 	"net/url"
@@ -35,7 +34,7 @@ func extractAndValidateMedia(ctx *gin.Context, cfg *config.Config) (*mediateq.Me
 	}
 
 	// Check the content type of the file
-	if !cfg.IsContentTypeAllowed(media.ContentType) {
+	if !cfg.IsContentTypeAllowed(media.ContentType) && media.ContentType != "multipart/form-data" {
 		return nil, jsonutil.InvalidContentTypeError(
 			fmt.Sprintf("content of type %s is not allowed.", media.ContentType),
 		)
@@ -54,20 +53,33 @@ func (h handler) upload(ctx *gin.Context) {
 		return
 	}
 
-	buffer, hash, err := fileutil.ParseRequestBody(ctx.Request.Body, h.config.MaxFileSizeBytes)
+	// Try to read the file from the request body
+	buffer, base64Hash, err := fileutil.ReadFile(ctx.Request.Body, h.config.MaxFileSizeBytes)
 	if err != nil {
 		h.logger.WithField("error", err.Error()).Error()
 		ctx.JSON(http.StatusInternalServerError, jsonutil.InternalServerError())
 		return
 	}
 
-	// // Resize if media is an image and here is a defaut image size width
-	if media.IsImage() && (h.config.Storage.DefaultImageSize.Width != 0) {
-		buffer, hash, media.Size, err = fileutil.ResizeImage(
-			buffer,
-			h.config.Storage.DefaultImageSize.Width,
-			h.config.Storage.DefaultImageSize.Height,
-		)
+	// Try to read the file from form when the request body is empty
+	if len(buffer) == 0 {
+		fileHeader, err := ctx.FormFile("file")
+		if err != nil {
+			h.logger.WithField("error", err.Error()).Error()
+			ctx.JSON(http.StatusInternalServerError, jsonutil.InternalServerError())
+			return
+		}
+
+		file, err := fileHeader.Open()
+		if err != nil {
+			h.logger.WithField("error", err.Error()).Error()
+			ctx.JSON(http.StatusInternalServerError, jsonutil.InternalServerError())
+			return
+		}
+
+		defer file.Close()
+
+		buffer, base64Hash, err = fileutil.ReadFile(file, h.config.MaxFileSizeBytes)
 		if err != nil {
 			h.logger.WithField("error", err.Error()).Error()
 			ctx.JSON(http.StatusInternalServerError, jsonutil.InternalServerError())
@@ -75,8 +87,22 @@ func (h handler) upload(ctx *gin.Context) {
 		}
 	}
 
+	// // Resize image if the file is an image and a defaut image size width is greather than 0
+	if media.IsImage() && (h.config.Storage.DefaultImageSize.Width != 0) {
+		buffer, base64Hash, media.Size, err = fileutil.ResizeImage(
+			buffer,
+			h.config.Storage.DefaultImageSize.Width,
+			h.config.Storage.DefaultImageSize.Height,
+		)
+		if err != nil {
+			h.logger.WithField("error", err.Error()).Error("failed to resize image")
+			ctx.JSON(http.StatusInternalServerError, jsonutil.InternalServerError())
+			return
+		}
+	}
+
 	// Set file base64 hash as id
-	media.Hash = hash
+	media.Base64Hash = base64Hash
 
 	// Check if we can detect actual content type of the file
 	acualContentType := mediateq.ContentType(http.DetectContentType(buffer))
@@ -92,7 +118,16 @@ func (h handler) upload(ctx *gin.Context) {
 		}
 	}
 
-	media.FilePath, err = h.storage.Write(ctx, buffer, hash)
+	// Check if file already exist based on the hash
+	// In that case no need to write file to storage again.
+	// We just return the media object from database
+	dbMedia, err := h.db.MediaTable.SelectByHash(ctx, media.Base64Hash)
+	if err == nil && dbMedia != nil {
+		ctx.JSON(http.StatusOK, jsonutil.Response{"media": dbMedia})
+		return
+	}
+
+	media.FilePath, err = h.storage.Write(ctx, buffer, base64Hash)
 	if err != nil {
 		h.logger.WithField("error", err.Error()).Error()
 		ctx.JSON(http.StatusInternalServerError, jsonutil.UnknownError("failed to write file to storage"))
@@ -100,7 +135,7 @@ func (h handler) upload(ctx *gin.Context) {
 	}
 
 	// Create the file URL
-	media.URL, err = url.JoinPath(h.config.Domain, apiBasePath, "download", media.Hash)
+	media.URL, err = url.JoinPath(h.config.Domain, apiBasePath, "download", media.Base64Hash)
 	if err != nil {
 		h.logger.WithField("error", err.Error()).Error()
 		ctx.JSON(http.StatusInternalServerError, jsonutil.InternalServerError())
@@ -109,7 +144,7 @@ func (h handler) upload(ctx *gin.Context) {
 
 	// TODO: handle case of duplicate upload
 	media.ID, err = h.db.MediaTable.Insert(ctx, media)
-	if err != sql.ErrNoRows && err != nil {
+	if err != nil {
 		h.logger.WithField("database-error", err.Error()).Error()
 		ctx.JSON(http.StatusInternalServerError, jsonutil.InternalServerError())
 		return

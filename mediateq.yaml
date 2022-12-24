@@ -23,7 +23,7 @@ database:
   password: mediateq 
 
 # The maximum size of file to accept on the server in bytes
-max_file_size_bytes: 10000000
+max_file_size_bytes: 50000000
 
 
 

@@ -8,7 +8,7 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestParseRequestBody(t *testing.T) {
+func TestReadFile(t *testing.T) {
 
 	// Define test cases
 	testCases := []struct {
@@ -39,7 +39,7 @@ func TestParseRequestBody(t *testing.T) {
 		t.Run(tc.name, func(t *testing.T) {
 
 			// Call the function being tested
-			body, hash, err := ParseRequestBody(tc.requestBody, tc.maxFileSize)
+			body, hash, err := ReadFile(tc.requestBody, tc.maxFileSize)
 
 			// Verify the results
 			assert.Equal(t, nil, err)

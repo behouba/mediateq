@@ -8,11 +8,11 @@ import (
 	"github.com/h2non/bimg"
 )
 
-// ParseRequestBody read request body and
-// create the sha256 hash of the request body to be used as filename
-func ParseRequestBody(request io.Reader, maxFileSizeBytes int64) (buffer []byte, hash string, err error) {
+// ReadFile read a file from an io.Reader and
+// create the sha256 hash based on the containt of the request body to be used as filename
+func ReadFile(r io.Reader, maxFileSizeBytes int64) (buffer []byte, hash string, err error) {
 
-	body := io.LimitReader(request, maxFileSizeBytes)
+	body := io.LimitReader(r, maxFileSizeBytes)
 
 	hasher := sha256.New()
 
