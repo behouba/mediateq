@@ -12,7 +12,7 @@ func TestQueryParamToInt(t *testing.T) {
 	tests := []struct {
 		query      string
 		queryValue string
-		expected   int64
+		expected   int
 	}{
 		{
 			query:      "offset",
