@@ -1,8 +1,8 @@
 
 CREATE TABLE IF NOT EXISTS "media" (
     "id" BIGSERIAL PRIMARY KEY,
-    "base64_hash" TEXT NOT NULL UNIQUE,
-    "file_path" TEXT NOT NULL,
+    "base64_hash" TEXT NOT NULL,
+    "file_path" TEXT NOT NULL UNIQUE,
     "content_type" TEXT NOT NULL,
     "origin" TEXT NOT NULL,
     "url" TEXT NOT NULL UNIQUE,

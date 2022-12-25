@@ -17,9 +17,9 @@ import (
 // This function also generate image file's thumbnail based on the mediaId  and
 // the queries parameters: width and height.
 func (h handler) download(ctx *gin.Context) {
-	mediaId := ctx.Param("mediaId")
+	base64Hash := ctx.Param("base64Hash")
 
-	media, err := h.db.MediaTable.SelectByHash(ctx, mediaId)
+	media, err := h.db.MediaTable.SelectByHash(ctx, base64Hash)
 	if err != nil {
 		h.logger.WithField("error", err.Error())
 		ctx.JSON(http.StatusInternalServerError, jsonutil.NotFoundError(err.Error()))

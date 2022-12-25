@@ -57,6 +57,8 @@ The API specification of mediateq can be found [here](docs/mediateq-0.0.1.yaml)
 
 All endpoints should be prefixed with: `/mediateq/{version}`
 
+Note: mediateq uses base64 hash of files as filename to avoid duplications.
+
 ### /info (GET)
 
 Retrieves information about the server.
@@ -118,7 +120,7 @@ Content-Type: application/json
 }
 ```
 
-### /download/{mediaId} (GET)
+### /download/{base64Hash} (GET)
 
 Downloads a media file from the server.
 
@@ -208,7 +210,7 @@ Content-Type: application/json
 }
 ```
 
-### /media/{mediaId} (GET)
+### /media/{base64Hash} (GET)
 
 Retrieves information about a specific media file.
 
@@ -239,7 +241,7 @@ Content-Type: application/json
 }
 ```
 
-### /media/{mediaId} (DELETE)
+### /media/{base64Hash} (DELETE)
 
 Delete a specific media file by it base64 hash identifier.
 

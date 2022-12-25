@@ -142,7 +142,6 @@ func (h handler) upload(ctx *gin.Context) {
 		return
 	}
 
-	// TODO: handle case of duplicate upload
 	media.ID, err = h.db.MediaTable.Insert(ctx, media)
 	if err != nil {
 		h.logger.WithField("database-error", err.Error()).Error()

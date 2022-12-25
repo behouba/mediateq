@@ -50,13 +50,13 @@ func NewHandler(cfg *config.Config, storage mediateq.Storage, db *schema.Databas
 	{
 		mediateq.GET("/info", h.serverInfo)
 		mediateq.POST("/upload", h.upload)
-		mediateq.GET("/download/:mediaId", h.download)
+		mediateq.GET("/download/:base64Hash", h.download)
 
 		media := mediateq.Group("/media")
 		{
 			media.GET("", h.getMediaList)
-			media.GET("/:mediaId", h.getMediaByID)
-			media.DELETE("/:mediaId", h.deleteMedia)
+			media.GET("/:base64Hash", h.getMediaByID)
+			media.DELETE("/:base64Hash", h.deleteMedia)
 		}
 
 	}
