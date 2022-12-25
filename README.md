@@ -69,7 +69,7 @@ GET /info
 
 Example Response
 
-```json
+```
 HTTP/1.1 200 OK
 Content-Type: application/json
 
@@ -99,7 +99,7 @@ curl -X POST -H "Content-Type: multipart/form-data" -F "file=@herman.jpeg" http:
 
 Example Response
 
-```json
+```
 Copy code
 HTTP/1.1 200 OK
 Content-Type: application/json
