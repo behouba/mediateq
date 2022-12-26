@@ -6,7 +6,7 @@ mediateq is a file storage REST API microservice that allows users to upload and
 
 ## Prerequisites
 
-- libvips 8.3+ (8.8+ recommended)
+- libvips 8.3+
 - PostgreSQL 14+
 
 ## Installation
@@ -17,7 +17,15 @@ To install mediateq, clone the project repository:
 git clone https://github.com/behouba/mediateq.git
 ```
 
-Mediateq depend on libvips. Run the following script from [bimg](https://github.com/h2non/bimg) as sudo (supports OSX, Debian/Ubuntu, Redhat, Fedora, Amazon Linux):
+Mediateq depend on libvips.
+
+Install libvips on Debian based Linux distributions:
+
+```bash
+sudo apt install -y libvips-dev
+```
+
+Run the following script from [bimg](https://github.com/h2non/bimg) as sudo (supports OSX, Debian/Ubuntu, Redhat, Fedora, Amazon Linux):
 
 ```bash
 curl -s https://raw.githubusercontent.com/h2non/bimg/master/preinstall.sh | sudo bash -
