@@ -24,7 +24,6 @@ func extractAndValidateMedia(ctx *gin.Context, cfg *config.Config) (*mediateq.Me
 		Origin:      ctx.ClientIP(),
 		ContentType: mediateq.ContentType(ctx.ContentType()),
 		SizeBytes:   ctx.Request.ContentLength,
-		UploadName:  ctx.Request.FormValue("filename"),
 		Timestamp:   time.Now().Unix(),
 	}
 
@@ -91,11 +90,12 @@ func (h handler) upload(ctx *gin.Context) {
 	}
 
 	// // Resize image if the file is an image and a defaut image size width is greather than 0
-	if media.IsImage() && (h.config.Storage.DefaultImageSize.Width > 0) {
+	if media.IsImage() && (h.config.DefaultImageSize.Width > 0) {
 		buffer, base64Hash, err = fsutils.ResizeImage(
 			buffer,
-			h.config.Storage.DefaultImageSize.Width,
-			h.config.Storage.DefaultImageSize.Height,
+			h.config.DefaultImageSize.Width,
+			h.config.DefaultImageSize.Height,
+			false,
 		)
 		if err != nil {
 			h.logger.WithField("error", err.Error()).Error("failed to resize image")
@@ -151,6 +151,63 @@ func (h handler) upload(ctx *gin.Context) {
 		h.logger.WithField("database-error", err.Error()).Error()
 		ctx.JSON(http.StatusInternalServerError, jsonutil.InternalServerError())
 		return
+	}
+
+	// Generate thumbnail in a go routine
+	if media.IsImage() {
+		go func() {
+			for _, size := range h.config.ThumbnailSizes {
+
+				tbuf, base64Hash, err := fsutils.ResizeImage(buffer, size.Width, size.Height, size.Crop)
+				if err != nil {
+					h.logger.WithField("error", err.Error()).Errorf(
+						"failed to generate thumbnail (width: %v, height: %v, crop: %v)", size.Width, size.Height, size.Crop,
+					)
+					continue
+				}
+
+				thumbnail := mediateq.Thumbnail{
+					Media: mediateq.Media{
+						ID:          media.ID,
+						Origin:      media.Origin,
+						ContentType: media.ContentType,
+						Timestamp:   time.Now().Unix(),
+						Base64Hash:  base64Hash,
+						SizeBytes:   int64(len(tbuf)),
+					},
+					ThumbnailSize: size,
+				}
+
+				thumbnailFilePath, err := thumbnail.GetFilePath(h.config.Storage.UploadPath)
+				if err != nil {
+					h.logger.WithField("error", err.Error()).Error("failed to get thumbnail file path")
+					continue
+				}
+
+				if err := h.storage.Write(ctx, tbuf, thumbnailFilePath); err != nil {
+					h.logger.WithField("error", err.Error()).Error("failed to write thumbnail to storage")
+					continue
+				}
+
+				urlPath, err := url.JoinPath(h.config.Domain, apiBasePath, "thumbnail", media.ID)
+				if err != nil {
+					h.logger.WithField("error", err.Error()).Error("failed to generate thumbnail URL")
+					continue
+				}
+
+				thumbnail.URL = fmt.Sprintf(urlPath+"?width=%d&height=%d", thumbnail.Width, thumbnail.Height)
+
+				if thumbnail.Crop {
+					thumbnail.URL += "&crop=true"
+				}
+
+				if err := h.db.ThumbnailTable.Insert(ctx, &thumbnail); err != nil {
+					h.logger.WithField("database-error", err.Error()).Error("failed to save thumbnail to database")
+				}
+
+			}
+
+		}()
 	}
 
 	ctx.JSON(http.StatusOK, jsonutil.Response{"media": media})

@@ -44,28 +44,23 @@ type ImageProcessor interface {
 
 // Media is a representation of mediateq file.
 type Media struct {
-	ID          string      `json:"id"`                   // Numeric id (db primary key)
-	Base64Hash  string      `json:"base64Hash"`           // Base64 hash of the file used as a unique string identifier
-	URL         string      `json:"url"`                  // url to access the file over internet
-	Origin      string      `json:"origin"`               // Origin domain of the file
-	ContentType ContentType `json:"contentType"`          //
-	SizeBytes   int64       `json:"sizeBytes"`            // Size of the file in bytes
-	Timestamp   int64       `json:"tmestamp"`             // Media creation timestamp
-	UploadName  string      `json:"uploadName,omitempty"` // Media file upload name
+	ID          string      `json:"id"`          // Numeric id (db primary key)
+	URL         string      `json:"url"`         // url to access the file over internet
+	Origin      string      `json:"origin"`      // Origin domain of the file
+	ContentType ContentType `json:"contentType"` //
+	SizeBytes   int64       `json:"sizeBytes"`   // Size of the file in bytes
+	Timestamp   int64       `json:"tmestamp"`    // Media creation timestamp
+	Base64Hash  string      `json:"base64Hash"`  // Base64 hash of the file used as a unique string identifier
 }
 
 // IsImage check if a media file is an image base on it content type
 func (m Media) IsImage() bool {
-	cts := strings.Split(string(m.ContentType), "/")
-	if len(cts) == 0 {
-		return false
-	}
-	return cts[0] == "image"
+	return strings.HasPrefix(string(m.ContentType), "image")
 }
 
 // GetFilePath return the path to a media file
 // 2 subdirectories are created for more manageable browsing and use the remainder as the file name.
-// For example, if Base64Hash is 'qwerty' and content type is 'image/png' the path will be 'q/w/erty.png'.
+// For example, if Base64Hash is 'qwerty' and content type is 'image/png' the path will be 'q/w/erty'.
 func (m Media) GetFilePath(uploadPath string) (string, error) {
 
 	if len(m.Base64Hash) < 3 {
@@ -75,20 +70,12 @@ func (m Media) GetFilePath(uploadPath string) (string, error) {
 		return "", fmt.Errorf("invalid filePath (Base64Hash too long - max 255 characters): %q", m.Base64Hash)
 	}
 
-	// ext, err := mime.ExtensionsByType(string(m.ContentType))
-	// if err != nil || len(ext) == 0 {
-	// 	return "", fmt.Errorf("unable to get media extention for content type %v", m.ContentType)
-	// }
-
 	filePath, err := filepath.Abs(filepath.Join(
 		uploadPath,
 		m.Base64Hash[0:1],
 		m.Base64Hash[1:2],
 		m.Base64Hash[2:],
 	))
-
-	// // Append file extension to filePath
-	// filePath = filePath + ext[0]
 
 	if err != nil {
 		return "", fmt.Errorf("unable to construct filePath: %w", err)
@@ -102,6 +89,17 @@ func (m Media) GetFilePath(uploadPath string) (string, error) {
 
 	return filePath, nil
 
+}
+
+type ThumbnailSize struct {
+	Width  int  `yaml:"width"`
+	Height int  `yaml:"height"`
+	Crop   bool `yaml:"method"`
+}
+
+type Thumbnail struct {
+	Media
+	ThumbnailSize
 }
 
 // Storage is an abstration of place where files are stored

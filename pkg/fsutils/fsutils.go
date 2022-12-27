@@ -28,9 +28,10 @@ func ReadAndHash(r io.Reader) (buf []byte, base64Hash string, err error) {
 
 // ResizeImage resize image
 // TODO:Comment and write test
-func ResizeImage(buf []byte, width, height int) (outBuf []byte, base64Hash string, err error) {
+func ResizeImage(buf []byte, width, height int, crop bool) (outBuf []byte, base64Hash string, err error) {
+
 	resizedBuf, err := bimg.Resize(
-		buf, bimg.Options{Width: width, Height: height},
+		buf, bimg.Options{Width: width, Height: height, Crop: crop},
 	)
 	if err != nil {
 		return

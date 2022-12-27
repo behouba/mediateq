@@ -72,6 +72,7 @@ func AddRoutes(r http.Handler, cfg *config.Config, storage mediateq.Storage, db 
 		mediateq.GET("/info", h.serverInfo)
 		mediateq.POST("/upload", h.upload)
 		mediateq.GET("/download/:mediaId", h.download)
+		mediateq.GET("/thumbnail/:mediaId", h.thumbnail)
 
 		media := mediateq.Group("/media")
 		{

@@ -22,6 +22,14 @@ database:
   # Database user password
   password: mediateq 
 
+# Configuration data of the file storage
+storage:
+  # The type of storage [localdisk: to save file on your local machine]
+  type: localdisk
+  # The relative or absolute path to the folder were files should be stored
+  upload_path: ./upload
+
+
 # The maximum size of file to accept on the server in bytes
 max_file_size_bytes: 50000000
 
@@ -35,23 +43,36 @@ allowed_content_types:
   - image/webp
 
 
+# Use this variable to specify if the server should allow 
+# request to delete files 
+delete_allowed: false
 
-# Configuration data of the file storage
-storage:
-  # The type of storage [localdisk: to save file on your local machine]
-  type: localdisk
-  # The relative or absolute path to the folder were files should be stored
-  upload_path: ./upload
-  # Use this variable to specify if the server should allow 
-  # request to delete files 
-  delete_allowed: false
-  # Configure the default size for uploaded images 
-  # to prioritize file size while preserving a sufficient 
-  # level of quality. If the width and height are set to 0, 
-  # the files will not be resized upon upload. 
-  # To maintain the aspect ratio of the image, only set the width and leave the height as 0.
-  default_image_size:
-    # default image width in pixels
-    width: 1200
-    # default imamge height in pixels
-    height: 0
+
+# Whether to dynamically generate thumbnails if needed.
+dynamic_thumbnails: false
+
+# The maximum number of simultaneous thumbnail generators to run.
+max_thumbnail_generators: 10
+
+# Configure the default size for uploaded images 
+# to prioritize file size while preserving a sufficient 
+# level of quality. If the width and height are set to 0, 
+# the files will not be resized upon upload. 
+# To maintain the aspect ratio of the image, only set the width and leave the height as 0.
+default_image_size:
+  # default image width in pixels
+  width: 1280
+  # default imamge height in pixels
+  height: 0
+
+# A list of thumbnail sizes to be generated for media content.
+thumbnail_sizes:
+  - width: 32
+    height: 32
+    crop: true
+  - width: 96
+    height: 96
+    crop: true
+  - width: 640
+    height: 480
+    crop: false

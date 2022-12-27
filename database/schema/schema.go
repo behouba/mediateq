@@ -10,7 +10,8 @@ import (
 
 // Database represents mediateq database and group all database operations
 type Database struct {
-	MediaTable MediaTable
+	MediaTable     MediaTable
+	ThumbnailTable ThumbnailTable
 }
 
 // MediaTable is an interface to represent the database operations on media objects
@@ -21,6 +22,13 @@ type MediaTable interface {
 	// Get paginated list of medias
 	SelectList(ctx context.Context, offset, limit int) ([]mediateq.Media, error)
 	Delete(ctx context.Context, id string) error
+}
+
+type ThumbnailTable interface {
+	Insert(ctx context.Context, thumbnail *mediateq.Thumbnail) error
+	Select(ctx context.Context, mediaID string, width, height int, crop bool) (*mediateq.Thumbnail, error)
+	SelectByMediaID(ctx context.Context, mediaID string) ([]mediateq.Thumbnail, error)
+	Delete(ctx context.Context, mediaID string) error
 }
 
 // statementList is a list of SQL statements to prepare and a pointer to where to store the resulting prepared statement.

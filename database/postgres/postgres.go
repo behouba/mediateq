@@ -25,7 +25,13 @@ func NewDatabase(cfg *config.Database) (*schema.Database, error) {
 		return nil, err
 	}
 
+	thumbnailTable, err := newThumbnailTable(db)
+	if err != nil {
+		return nil, err
+	}
+
 	return &schema.Database{
-		MediaTable: mediaTable,
+		MediaTable:     mediaTable,
+		ThumbnailTable: thumbnailTable,
 	}, nil
 }

@@ -36,13 +36,16 @@ var (
 
 // Config is the global configuration object of mediateq server
 type Config struct {
-	Version             string                 `yaml:"version"`
-	Port                int                    `yaml:"port"`   // Port on which the server should run
-	Domain              string                 `yaml:"domain"` // URL of the server domain (example: https://example.com or localhost:8080)
-	Database            *Database              `yaml:"database"`
-	Storage             *Storage               `yaml:"storage"`
-	AllowedContentTypes []mediateq.ContentType `yaml:"allowed_content_types"`
-	MaxFileSizeBytes    int64                  `yaml:"max_file_size_bytes"`
+	Version             string                   `yaml:"version"`
+	Port                int                      `yaml:"port"`   // Port on which the server should run
+	Domain              string                   `yaml:"domain"` // URL of the server domain (example: https://example.com or localhost:8080)
+	Database            *Database                `yaml:"database"`
+	Storage             *Storage                 `yaml:"storage"`
+	AllowedContentTypes []mediateq.ContentType   `yaml:"allowed_content_types"`
+	MaxFileSizeBytes    int64                    `yaml:"max_file_size_bytes"`
+	DeleteAllowed       bool                     `yaml:"delete_allowed"`
+	DefaultImageSize    ImageSize                `yaml:"default_image_size"`
+	ThumbnailSizes      []mediateq.ThumbnailSize `yaml:"thumbnail_sizes"`
 }
 
 func (c *Config) ParseAndValidate() error {
@@ -117,10 +120,8 @@ type Database struct {
 }
 
 type Storage struct {
-	Type             mediateq.StorageType `yaml:"type"`        // The type of storage used by the to read and write files
-	UploadPath       string               `yaml:"upload_path"` // Path to the folder were files should be uploaded
-	DeleteAllowed    bool                 `yaml:"delete_allowed"`
-	DefaultImageSize ImageSize            `yaml:"default_image_size"`
+	Type       mediateq.StorageType `yaml:"type"`        // The type of storage used by the to read and write files
+	UploadPath string               `yaml:"upload_path"` // Path to the folder were files should be uploaded
 }
 
 // Load loads mediateq configuration from yaml file
