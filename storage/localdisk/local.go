@@ -2,12 +2,12 @@ package localdisk
 
 import (
 	"context"
-	"fmt"
+	"io"
 	"io/fs"
 	"os"
-	"path"
-	"time"
+	"path/filepath"
 
+	"github.com/behouba/mediateq"
 	"github.com/behouba/mediateq/pkg/config"
 )
 
@@ -15,7 +15,14 @@ type storage struct {
 	cfg *config.Storage
 }
 
-func New(cfg *config.Storage) (*storage, error) {
+func New(cfg *config.Storage) (mediateq.Storage, error) {
+
+	var err error
+
+	cfg.UploadPath, err = filepath.Abs(cfg.UploadPath)
+	if err != nil {
+		return nil, err
+	}
 
 	// Create the file upload directory
 	if err := os.MkdirAll(cfg.UploadPath, fs.ModePerm); err != nil {
@@ -25,36 +32,49 @@ func New(cfg *config.Storage) (*storage, error) {
 	return &storage{cfg}, nil
 }
 
-// getSubPath return a formatted representation of the current date
-// intended to be used as upload subfolders names in the format {year}/{month}
-func getSubPath() string {
-	t := time.Now()
-	return fmt.Sprintf("%d/%02d", t.Year(), t.Month())
-}
+func (s storage) Write(ctx context.Context, buff []byte, filePath string) error {
 
-func (s storage) Write(ctx context.Context, buff []byte, filename string) (filePath string, err error) {
-
-	subPath := getSubPath()
-
-	if err = os.MkdirAll(path.Join(s.cfg.UploadPath, subPath), fs.ModePerm); err != nil {
-		return
+	// Check if file already exist and return nil
+	_, err := os.Stat(filePath)
+	if os.IsExist(err) {
+		return nil
 	}
 
-	filePath = path.Join(s.cfg.UploadPath, subPath, filename)
+	// Create subdirectories
+	if err := os.MkdirAll(filepath.Dir(filePath), fs.ModePerm); err != nil {
+		return err
+	}
 
+	// Create a new file
 	file, err := os.Create(filePath)
 	if err != nil {
-		return
+		return err
 	}
 
 	defer file.Close()
 
 	_, err = file.Write(buff)
 	if err != nil {
-		return
+		return err
 	}
 
-	return filePath, nil
+	return nil
+}
+
+// Read implements mediateq.Storage
+func (*storage) Read(ctx context.Context, filePath string) ([]byte, error) {
+
+	file, err := os.Open(filePath)
+	if err != nil {
+		return nil, err
+	}
+
+	buf, err := io.ReadAll(file)
+	if err != nil {
+		return nil, err
+	}
+
+	return buf, nil
 }
 
 func (s storage) Remove(ctx context.Context, path string) error {

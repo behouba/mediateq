@@ -36,7 +36,7 @@ func (h handler) getMediaList(ctx *gin.Context) {
 func (h handler) getMediaByID(ctx *gin.Context) {
 	base64Hash := ctx.Param("base64Hash")
 
-	media, err := h.db.MediaTable.SelectByHash(ctx, base64Hash)
+	media, err := h.db.MediaTable.SelectByID(ctx, base64Hash)
 	if err != nil {
 		// Check if the error is just about non existing media id
 		if err == sql.ErrNoRows {

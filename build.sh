@@ -1,4 +1,4 @@
-#!/usr/bin/bash
+#!/bin/sh
 
 OUTPUT_DIR=bin
 

@@ -1,8 +1,6 @@
 package routing
 
 import (
-	"time"
-
 	"github.com/behouba/mediateq"
 )
 
@@ -11,6 +9,9 @@ type serverInfo struct {
 	Version             string                 `json:"version"`
 	Domain              string                 `json:"domain"`
 	Port                int                    `json:"port"`
-	StartTime           time.Time              `json:"startTime"`
+	Database            mediateq.DBType        `json:"database"`
+	Storage             mediateq.StorageType   `json:"storage"`
 	AllowedContentTypes []mediateq.ContentType `json:"allowedContentTypes"`
+	Uptime              int64                  `json:"uptime"`
+	startTime           int64
 }

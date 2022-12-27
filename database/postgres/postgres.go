@@ -14,7 +14,7 @@ import (
 func NewDatabase(cfg *config.Database) (*schema.Database, error) {
 
 	db, err := sql.Open("postgres",
-		fmt.Sprintf("dbname=%v user=%v password=%v", cfg.DBName, cfg.Username, cfg.Password),
+		fmt.Sprintf("dbname=%v user=%v password=%v port=%v", cfg.DBName, cfg.Username, cfg.Password, cfg.Port),
 	)
 	if err != nil {
 		return nil, err

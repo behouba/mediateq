@@ -1,13 +1,10 @@
 package routing
 
 import (
-	"io"
 	"net/http"
-	"os"
-	"path/filepath"
 	"time"
 
-	"github.com/behouba/mediateq/pkg/fileutil"
+	"github.com/behouba/mediateq/pkg/fsutils"
 	"github.com/digitalcore-ci/jsonutil"
 	"github.com/gin-gonic/gin"
 )
@@ -17,26 +14,26 @@ import (
 // This function also generate image file's thumbnail based on the mediaId  and
 // the queries parameters: width and height.
 func (h handler) download(ctx *gin.Context) {
-	base64Hash := ctx.Param("base64Hash")
+	mediaID := ctx.Param("mediaId")
 
-	media, err := h.db.MediaTable.SelectByHash(ctx, base64Hash)
+	media, err := h.db.MediaTable.SelectByID(ctx, mediaID)
 	if err != nil {
 		h.logger.WithField("error", err.Error())
-		ctx.JSON(http.StatusInternalServerError, jsonutil.NotFoundError(err.Error()))
+		ctx.JSON(http.StatusInternalServerError, jsonutil.NotFoundError("file not found"))
 		return
 	}
 
-	file, err := os.Open(filepath.Join(media.FilePath))
+	filePath, err := media.GetFilePath(h.config.Storage.UploadPath)
 	if err != nil {
 		h.logger.WithField("error", err.Error())
-		ctx.JSON(http.StatusInternalServerError, jsonutil.NotFoundError(err.Error()))
+		ctx.JSON(http.StatusInternalServerError, jsonutil.UnknownError("can get file path"))
 		return
 	}
 
-	fileBuffer, err := io.ReadAll(file)
+	buffer, err := h.storage.Read(ctx, filePath)
 	if err != nil {
 		h.logger.WithField("error", err.Error())
-		ctx.JSON(http.StatusInternalServerError, jsonutil.NotFoundError(err.Error()))
+		ctx.JSON(http.StatusInternalServerError, jsonutil.UnknownError("can get read file from storage"))
 		return
 	}
 
@@ -44,7 +41,7 @@ func (h handler) download(ctx *gin.Context) {
 	width := queryParamToInt(ctx, "width")
 
 	if media.IsImage() && width > 0 {
-		fileBuffer, _, _, err = fileutil.ResizeImage(fileBuffer, width, 0)
+		buffer, _, err = fsutils.ResizeImage(buffer, width, 0)
 		if err != nil {
 			h.logger.WithField("error", err.Error())
 			ctx.JSON(http.StatusInternalServerError, jsonutil.NotFoundError(err.Error()))
@@ -57,6 +54,6 @@ func (h handler) download(ctx *gin.Context) {
 	ctx.Header("Cache-Control", "max-age=86400")
 	ctx.Header("Expires", time.Now().Add(time.Hour*24).Format(time.RFC1123))
 
-	ctx.Writer.Write(fileBuffer)
+	ctx.Writer.Write(buffer)
 
 }
