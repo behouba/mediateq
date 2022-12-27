@@ -49,13 +49,13 @@ func TestGetFilePath(t *testing.T) {
 			name:             "test case 1",
 			media:            Media{Base64Hash: "mediateq", ContentType: "image/png"},
 			uploadPath:       "/tmp",
-			expectedFilePath: "/tmp/m/e/diateq.png",
+			expectedFilePath: "/tmp/m/e/diateq",
 		},
 		{
 			name:             "test case 2",
 			media:            Media{Base64Hash: "qwerty", ContentType: "image/jpeg"},
 			uploadPath:       "/tmp",
-			expectedFilePath: "/tmp/q/w/erty.jpe",
+			expectedFilePath: "/tmp/q/w/erty",
 		},
 		{
 			name:       "test case 3",
