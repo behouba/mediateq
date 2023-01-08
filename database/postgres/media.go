@@ -67,8 +67,8 @@ func (s mediaStmts) SelectList(ctx context.Context, offset int, limit int) ([]me
 		m := mediateq.Media{}
 
 		if err := rows.Scan(
-			&m.ID, &m.Base64Hash, "", &m.ContentType,
-			&m.Origin, &m.URL, &m.Timestamp, &m.SizeBytes,
+			&m.ID, &m.ContentType, &m.Origin, &m.URL,
+			&m.Base64Hash, &m.Timestamp, &m.SizeBytes,
 		); err != nil {
 			return nil, err
 		}
