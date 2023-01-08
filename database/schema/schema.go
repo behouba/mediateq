@@ -24,7 +24,7 @@ type MediaTable interface {
 
 type ThumbnailTable interface {
 	Insert(ctx context.Context, thumbnail *mediateq.Thumbnail) error
-	Select(ctx context.Context, mediaID string, width, height int, crop bool) (*mediateq.Thumbnail, error)
+	Select(ctx context.Context, base64Hash string, width, height int, crop bool) (*mediateq.Thumbnail, error)
 	SelectByMediaID(ctx context.Context, mediaID string) ([]mediateq.Thumbnail, error)
 	Delete(ctx context.Context, mediaID string) error
 }

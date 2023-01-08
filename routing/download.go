@@ -39,13 +39,13 @@ func (h handler) download(ctx *gin.Context) {
 // This function also generate image file's thumbnail based on the mediaId  and
 // the queries parameters: width (integer, required) and height (integer, required), and crop (boolean, optional)
 func (h handler) thumbnail(ctx *gin.Context) {
-	mediaID := ctx.Param("mediaId")
+	base64Hash := ctx.Param("base64Hash")
 
 	width, height := queryParamToInt(ctx, "width"), queryParamToInt(ctx, "height")
 
 	crop := ctx.GetBool("crop")
 
-	thumbnail, err := h.db.ThumbnailTable.Select(ctx, mediaID, width, height, crop)
+	thumbnail, err := h.db.ThumbnailTable.Select(ctx, base64Hash, width, height, crop)
 	if err != nil {
 		// TODO: Generate thumbnail
 		h.logger.WithField("error", err.Error())

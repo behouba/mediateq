@@ -87,13 +87,15 @@ Content-Type: application/json
     "version": "v0",
     "domain": "http://localhost:8080",
     "port": 8080,
-    "startTime": "2022-12-25T14:07:54.6703027+03:00",
+    "database": "postgres",
+    "storage": "localdisk",
     "allowedContentTypes": [
     "image/jpeg",
     "image/png",
     "image/bimg",
     "image/webp"
-    ]
+    ],
+    "uptime": 35
 }
 ```
 
@@ -116,14 +118,13 @@ Content-Type: application/json
 
 {
     "media": {
-        "id": 3,
-        "base64Hash": "RhoW8IwG1qO_nP_yua5VfYbdSI_wiNAZ2BWcsogMAVo",
-        "url": "http://localhost:8080/mediateq/v0/download/RhoW8IwG1qO_nP_yua5VfYbdSI_wiNAZ2BWcsogMAVo",
-        "filePath": "upload/2022/12/RhoW8IwG1qO_nP_yua5VfYbdSI_wiNAZ2BWcsogMAVo",
+        "id": "2K2dScz76xXsc0D3u29M3w1iKcw",
+        "url": "http://localhost:8080/mediateq/v0/download/2K2dScz76xXsc0D3u29M3w1iKcw",
         "origin": "::1",
         "contentType": "image/jpeg",
-        "size": 235807,
-        "tmestamp": 1671898018
+        "sizeBytes": 103417,
+        "tmestamp": 1673176612,
+        "base64Hash": "zKZqFTxVdiIWGf-4otBjjBS46aPqs-Q6W0mefJmVhmo"
     }
 }
 ```
@@ -132,18 +133,36 @@ Content-Type: application/json
 
 Downloads a media file from the server.
 
-You can use `width` query parameter to get resized version for images files.
-
 Example Request
 
 ```
-GET /download/RhoW8IwG1qO_nP_yua5VfYbdSI_wiNAZ2BWcsogMAVo?width=400
+GET /download/2K2dScz76xXsc0D3u29M3w1iKcw?width=400
 Example Response
 
 Copy code
 HTTP/1.1 200 OK
 Content-Type: video/mp4
 [binary data]
+```
+
+### /thumbnail/{base64Hash} (GET)
+
+Downloads thumbnail version of images files.
+
+The `width` and `height` of the image are required queries paramters.
+
+Example Request
+
+```
+
+GET /download/2K2dScz76xXsc0D3u29M3w1iKcw?width=640&height=480
+Example Response
+
+Copy code
+HTTP/1.1 200 OK
+Content-Type: video/mp4
+[binary data]
+
 ```
 
 ### /media (GET)
@@ -159,63 +178,33 @@ GET /media?limit=4&offset=1
 Example Response
 
 ```
+
 HTTP/1.1 200 OK
 Content-Type: application/json
 
 {
-"mediaList": [
-    {
-        "id": 1,
-        "base64Hash": "4siOxL16rCSeWvEeGxBAtqMmF04HffW_qg8zWuOh2MY",
-        "url": "http://localhost:8080/mediateq/v0/download/4siOxL16rCSeWvEeGxBAtqMmF04HffW_qg8zWuOh2MY",
-        "filePath": "upload/2022/12/4siOxL16rCSeWvEeGxBAtqMmF04HffW_qg8zWuOh2MY",
-        "origin": "::1",
-        "contentType": "image/jpeg",
-        "size": 92998,
-        "tmestamp": 1671895940
-    },
-    {
-        "id": 2,
-        "base64Hash": "OSxgpSK--4-S9UlcQS9HqlJxQKssGppuawP57HTXKX8",
-        "url": "http://localhost:8080/mediateq/v0/download/OSxgpSK--4-S9UlcQS9HqlJxQKssGppuawP57HTXKX8",
-        "filePath": "upload/2022/12/OSxgpSK--4-S9UlcQS9HqlJxQKssGppuawP57HTXKX8",
-        "origin": "::1",
-        "contentType": "image/jpeg",
-        "size": 112816,
-        "tmestamp": 1671896197
-    },
-    {
-        "id": 3,
-        "base64Hash": "RhoW8IwG1qO_nP_yua5VfYbdSI_wiNAZ2BWcsogMAVo",
-        "url": "http://localhost:8080/mediateq/v0/download/RhoW8IwG1qO_nP_yua5VfYbdSI_wiNAZ2BWcsogMAVo",
-        "filePath": "upload/2022/12/RhoW8IwG1qO_nP_yua5VfYbdSI_wiNAZ2BWcsogMAVo",
-        "origin": "::1",
-        "contentType": "image/jpeg",
-        "size": 235807,
-        "tmestamp": 1671898018
-    },
-    {
-        "id": 4,
-        "base64Hash": "_n_0rkoX659AMNyTAlnoyOfI3nvpSZMjn57GNI3A2oE",
-        "url": "http://localhost:8080/mediateq/v0/download/_n_0rkoX659AMNyTAlnoyOfI3nvpSZMjn57GNI3A2oE",
-        "filePath": "upload/2022/12/_n_0rkoX659AMNyTAlnoyOfI3nvpSZMjn57GNI3A2oE",
-        "origin": "::1",
-        "contentType": "image/png",
-        "size": 747191,
-        "tmestamp": 1671906045
-    },
-    {
-        "id": 5,
-        "base64Hash": "wGNrFrL53Nr6pNlIyF4q57jquUAkKiCK3q_WwSt52II",
-        "url": "http://localhost:8080/mediateq/v0/download/wGNrFrL53Nr6pNlIyF4q57jquUAkKiCK3q_WwSt52II",
-        "filePath": "upload/2022/12/wGNrFrL53Nr6pNlIyF4q57jquUAkKiCK3q_WwSt52II",
-        "origin": "::1",
-        "contentType": "image/jpeg",
-        "size": 237301,
-        "tmestamp": 1671906079
-    }
-]
+    "mediaList": [
+        {
+            "id": "2JVvl82araY9MfG9O2keI1dSZDy",
+            "url": "http://localhost:8080/mediateq/v0/download/2JVvl82araY9MfG9O2keI1dSZDy",
+            "origin": "::1",
+            "contentType": "image/jpeg",
+            "sizeBytes": 103417,
+            "tmestamp": 1672176212,
+            "base64Hash": "zKZqFTxVdiIWGf-4otBjjBS46aPqs-Q6W0mefJmVhmo"
+        },
+        {
+            "id": "2K2dScz76xXsc0D3u29M3w1iKcw",
+            "url": "http://localhost:8080/mediateq/v0/download/2K2dScz76xXsc0D3u29M3w1iKcw",
+            "origin": "::1",
+            "contentType": "image/jpeg",
+            "sizeBytes": 103417,
+            "tmestamp": 1673176612,
+            "base64Hash": "zKZqFTxVdiIWGf-4otBjjBS46aPqs-Q6W0mefJmVhmo"
+        }
+    ]
 }
+
 ```
 
 ### /media/{base64Hash} (GET)
@@ -226,27 +215,29 @@ Example Request
 
 ```
 
-GET /media/4siOxL16rCSeWvEeGxBAtqMmF04HffW_qg8zWuOh2MY
+GET /media/2K2dScz76xXsc0D3u29M3w1iKcw
+
 ```
 
 Example Response
 
 ```
+
 HTTP/1.1 200 OK
 Content-Type: application/json
 
 {
     "media": {
-        "id": 1,
-        "base64Hash": "4siOxL16rCSeWvEeGxBAtqMmF04HffW_qg8zWuOh2MY",
-        "url": "http://localhost:8080/mediateq/v0/download/4siOxL16rCSeWvEeGxBAtqMmF04HffW_qg8zWuOh2MY",
-        "filePath": "upload/2022/12/4siOxL16rCSeWvEeGxBAtqMmF04HffW_qg8zWuOh2MY",
+        "id": "2K2dScz76xXsc0D3u29M3w1iKcw",
+        "url": "http://localhost:8080/mediateq/v0/download/2K2dScz76xXsc0D3u29M3w1iKcw",
         "origin": "::1",
         "contentType": "image/jpeg",
-        "size": 92998,
-        "tmestamp": 1671895940
+        "sizeBytes": 103417,
+        "tmestamp": 1673176612,
+        "base64Hash": "zKZqFTxVdiIWGf-4otBjjBS46aPqs-Q6W0mefJmVhmo"
     }
 }
+
 ```
 
 ### /media/{base64Hash} (DELETE)
@@ -258,19 +249,22 @@ Example Request
 ```
 
 DELETE /media/4siOxL16rCSeWvEeGxBAtqMmF04HffW_qg8zWuOh2MY
+
 ```
 
 Example Response
 
 ```
+
 HTTP/1.1 200 OK
 Content-Type: application/json
 
 {
     "message": "media 4siOxL16rCSeWvEeGxBAtqMmF04HffW_qg8zWuOh2MY deleted"
 }
+
 ```
 
 ### Docker container
 
-TODO
+[TODO]
