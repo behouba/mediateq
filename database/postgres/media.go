@@ -54,6 +54,27 @@ func (mediaStmts) Delete(ctx context.Context, id string) error {
 	panic("unimplemented")
 }
 
+// Insert implements schema.MediaTable
+func (s mediaStmts) Insert(ctx context.Context, m *mediateq.Media) error {
+	_, err := s.insertStmt.ExecContext(
+		ctx, m.ID, m.ContentType, m.Origin, m.URL, m.Base64Hash, m.Timestamp, m.SizeBytes,
+	)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+// SelectByBase64Hash implements schema.MediaTable
+func (s mediaStmts) SelectByBase64Hash(ctx context.Context, base64Hash string) (*mediateq.Media, error) {
+	md := mediateq.Media{}
+	err := s.selectByHashStmt.QueryRowContext(ctx, base64Hash).Scan(
+		&md.ID, &md.ContentType, &md.Origin, &md.URL,
+		&md.Base64Hash, &md.Timestamp, &md.SizeBytes,
+	)
+	return &md, err
+}
+
 // SelectList implements schema.MediaTable
 func (s mediaStmts) SelectList(ctx context.Context, offset int, limit int) ([]mediateq.Media, error) {
 	mediaList := make([]mediateq.Media, 0)
@@ -76,36 +97,4 @@ func (s mediaStmts) SelectList(ctx context.Context, offset int, limit int) ([]me
 	}
 
 	return mediaList, nil
-}
-
-// Insert implements schema.MediaTable
-func (s mediaStmts) Insert(ctx context.Context, m *mediateq.Media) error {
-	_, err := s.insertStmt.ExecContext(
-		ctx, m.ID, m.ContentType, m.Origin, m.URL, m.Base64Hash, m.Timestamp, m.SizeBytes,
-	)
-	if err != nil {
-		return err
-	}
-	return nil
-}
-
-// SelectByUID implements schema.MediaTable
-func (s mediaStmts) SelectByID(ctx context.Context, hash string) (*mediateq.Media, error) {
-	md := mediateq.Media{}
-	// media_id, content_type, origin, url, base64hash, timestamp, size_bytes
-	err := s.selectByIDStmt.QueryRowContext(ctx, hash).Scan(
-		&md.ID, &md.ContentType, &md.Origin, &md.URL,
-		&md.Base64Hash, &md.Timestamp, &md.SizeBytes,
-	)
-	return &md, err
-}
-
-// SelectByUID implements schema.MediaTable
-func (s mediaStmts) SelectByBase64Hash(ctx context.Context, base64Hash string) (*mediateq.Media, error) {
-	md := mediateq.Media{}
-	err := s.selectByHashStmt.QueryRowContext(ctx, base64Hash).Scan(
-		&md.ID, &md.ContentType, &md.Origin, &md.URL,
-		&md.Base64Hash, &md.Timestamp, &md.SizeBytes,
-	)
-	return &md, err
 }

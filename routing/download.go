@@ -8,12 +8,12 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-// download handle GET /mediateq/version/download/{mediaId}.
+// download handle GET /mediateq/version/download/{base64Hash}.
 // Serve requested file to the client
 func (h handler) download(ctx *gin.Context) {
-	mediaID := ctx.Param("mediaId")
+	base64Hash := ctx.Param("base64Hash")
 
-	media, err := h.db.MediaTable.SelectByID(ctx, mediaID)
+	media, err := h.db.MediaTable.SelectByBase64Hash(ctx, base64Hash)
 	if err != nil {
 		h.logger.WithField("error", err.Error())
 		ctx.JSON(http.StatusInternalServerError, jsonutil.NotFoundError("file not found"))
