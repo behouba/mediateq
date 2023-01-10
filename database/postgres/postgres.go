@@ -14,7 +14,7 @@ import (
 func NewDatabase(cfg *config.Database) (*schema.Database, error) {
 
 	db, err := sql.Open("postgres",
-		fmt.Sprintf("dbname=%v user=%v password=%v", cfg.DBName, cfg.Username, cfg.Password),
+		fmt.Sprintf("dbname=%v user=%v password=%v port=%v", cfg.DBName, cfg.Username, cfg.Password, cfg.Port),
 	)
 	if err != nil {
 		return nil, err
@@ -25,7 +25,13 @@ func NewDatabase(cfg *config.Database) (*schema.Database, error) {
 		return nil, err
 	}
 
+	thumbnailTable, err := newThumbnailTable(db)
+	if err != nil {
+		return nil, err
+	}
+
 	return &schema.Database{
-		MediaTable: mediaTable,
+		MediaTable:     mediaTable,
+		ThumbnailTable: thumbnailTable,
 	}, nil
 }

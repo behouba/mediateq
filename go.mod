@@ -27,6 +27,8 @@ require (
 	github.com/nfnt/resize v0.0.0-20180221191011-83c6a9932646 // indirect
 	github.com/pelletier/go-toml/v2 v2.0.6 // indirect
 	github.com/pmezard/go-difflib v1.0.0 // indirect
+	github.com/rs/xid v1.4.0 // indirect
+	github.com/segmentio/ksuid v1.0.4 // indirect
 	github.com/ugorji/go/codec v1.2.7 // indirect
 	golang.org/x/crypto v0.3.0 // indirect
 	golang.org/x/net v0.3.0 // indirect

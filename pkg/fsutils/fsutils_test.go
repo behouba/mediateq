@@ -1,4 +1,4 @@
-package fileutil
+package fsutils
 
 import (
 	"io"
@@ -14,21 +14,18 @@ func TestReadFile(t *testing.T) {
 	testCases := []struct {
 		name         string
 		requestBody  io.Reader
-		maxFileSize  int64
 		expectedBody string
 		expectedHash string
 	}{
 		{
-			name:         "Request body too large",
-			requestBody:  strings.NewReader("Hello, World!"),
-			maxFileSize:  5,
-			expectedBody: "Hello",
-			expectedHash: "GF-NsyJx_iX1Yab8k4suJkMG7DBO2lGAB9F2SCY4GWk",
+			name:         "Test case 1",
+			requestBody:  strings.NewReader("Hello, Mediateq!"),
+			expectedBody: "Hello, Mediateq!",
+			expectedHash: "pWJTWXHB9qtt67AWq1pywKE7V-pQ4kayVObWuub7zC4",
 		},
 		{
-			name:         "Request body less than allowed maximum",
+			name:         "Test case 1",
 			requestBody:  strings.NewReader("Hello, World!"),
-			maxFileSize:  100,
 			expectedBody: "Hello, World!",
 			expectedHash: "3_1gIbsr1bCvZ2KQgJ7DpTGR3YHH9wpLKGiKNiGCmG8",
 		},
@@ -39,7 +36,7 @@ func TestReadFile(t *testing.T) {
 		t.Run(tc.name, func(t *testing.T) {
 
 			// Call the function being tested
-			body, hash, err := ReadFile(tc.requestBody, tc.maxFileSize)
+			body, hash, err := ReadAndHash(tc.requestBody)
 
 			// Verify the results
 			assert.Equal(t, nil, err)

@@ -2,7 +2,6 @@ package localdisk
 
 import (
 	"context"
-	"log"
 	"os"
 	"testing"
 
@@ -17,14 +16,14 @@ func TestWrite(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	filename := "hello.txt"
+	filePath := "/tmp/hello.txt"
 
-	filePath, err := storage.Write(context.Background(), []byte(`Hello world`), filename)
+	err = storage.Write(context.Background(), []byte(`Hello world`), filePath)
 	if err != nil {
 		t.Fatal(err)
 	}
 
 	defer os.RemoveAll(filePath)
 
-	log.Println(filePath)
+	t.Log(filePath)
 }

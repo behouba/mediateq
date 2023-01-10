@@ -31,17 +31,17 @@ func (h handler) getMediaList(ctx *gin.Context) {
 	ctx.JSON(http.StatusOK, jsonutil.Response{"mediaList": mediaList})
 }
 
-// getMediaByID handle GET /media/{mediaId}
+// getMediaByBase64Hash handle GET /media/{base64Hash}
 // It retrieve media data from database and send back JSON response
-func (h handler) getMediaByID(ctx *gin.Context) {
-	mediaID := ctx.Param("mediaId")
+func (h handler) getMediaByBase64Hash(ctx *gin.Context) {
+	base64Hash := ctx.Param("base64Hash")
 
-	media, err := h.db.MediaTable.SelectByHash(ctx, mediaID)
+	media, err := h.db.MediaTable.SelectByBase64Hash(ctx, base64Hash)
 	if err != nil {
 		// Check if the error is just about non existing media id
 		if err == sql.ErrNoRows {
 			ctx.JSON(
-				http.StatusNotFound, jsonutil.NotFoundError(fmt.Sprintf("media with id %s is not found", mediaID)),
+				http.StatusNotFound, jsonutil.NotFoundError(fmt.Sprintf("media with base64Hash %s is not found", base64Hash)),
 			)
 			return
 		}
