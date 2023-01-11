@@ -22,10 +22,10 @@ Mediateq depend on libvips.
 Install libvips on Debian based Linux distributions:
 
 ```bash
-sudo apt install -y libvips-dev
+sudo apt-get update && sudo apt-get install -y libvips-dev
 ```
 
-Run the following script from [bimg](https://github.com/h2non/bimg) as sudo (supports OSX, Debian/Ubuntu, Redhat, Fedora, Amazon Linux):
+or run the following script from [bimg](https://github.com/h2non/bimg) as sudo (supports OSX, Debian/Ubuntu, Redhat, Fedora, Amazon Linux):
 
 ```bash
 curl -s https://raw.githubusercontent.com/h2non/bimg/master/preinstall.sh | sudo bash -
